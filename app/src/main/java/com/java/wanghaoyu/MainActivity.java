@@ -1,5 +1,6 @@
 package com.java.wanghaoyu;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.java.wanghaoyu.R;
@@ -14,7 +15,18 @@ import android.view.View;
 
 import com.java.wanghaoyu.ui.main.SectionsPagerAdapter;
 
+import org.json.JSONException;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+
 public class MainActivity extends AppCompatActivity {
+
+    private static Manager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,5 +46,85 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        manager = Manager.getInstance(this);
+
     }
+
+/*
+    private static class Task extends AsyncTask<Void, Void, Task.Result> {
+        String url;
+        String type;
+        int page;
+        int size;
+
+        Task(String url, String type, int page, int size)
+        {
+            this.url = url;
+            this.type = type;
+            this.page = page;
+            this.size = size;
+        }
+        @Override
+        protected Result doInBackground(Void... voids) {
+            try {
+                URL url = new URL(this.url + "?type=" + this.type + "&page=" + this.page + "size=" + this.size);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("GET");
+                httpURLConnection.setReadTimeout(3000);
+                httpURLConnection.setConnectTimeout(3000);
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.connect();
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream(), StandardCharsets.UTF_8));
+                StringBuilder stringBuilder = new StringBuilder();
+                String str;
+                while((str = in.readLine()) != null){
+                    stringBuilder.append(str);
+                    stringBuilder.append("\n");
+                }
+                in.close();
+                httpURLConnection.disconnect();
+
+                return new Result(STATE.OK, stringBuilder.toString());
+            }catch (SocketTimeoutException e) {
+                return new Result(STATE.TIMEOUT, null);
+            }catch (Exception e){
+                return new Result(STATE.OTHERS, null);
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Result result) {
+            super.onPostExecute(result);
+            switch (result.state){
+                case OK:
+                    try {
+                        manager.dataBase.insertNewsList(type, page, result.data);
+                    }catch (JSONException e){
+
+                    }
+                    break;
+                case TIMEOUT:
+                    break;
+                case OTHERS:
+                    break;
+            }
+        }
+
+        enum STATE{OK, TIMEOUT, OTHERS}
+
+        class Result {
+            STATE state;
+            String data;
+
+            Result(STATE state, String data)
+            {
+                this.state = state;
+                this.data = data;
+            }
+        }
+    }
+
+ */
 }
