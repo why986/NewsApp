@@ -1,37 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context="com.java.wanghaoyu.MainActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+    <LinearLayout
+        android:layout_width="411dp"
+        android:layout_height="734dp"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/title"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:minHeight="?actionBarSize"
-            android:padding="@dimen/appbar_padding"
-            android:text="@string/app_name"
-            android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
+            android:layout_height="wrap_content">
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs"
+            <ImageButton
+                android:id="@+id/imageButton2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@android:drawable/ic_menu_search"
+                android:contentDescription="TODO"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/SearchText"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/SearchText"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/drawable_seach"
+                android:ems="10"
+                android:hint="今日热搜：肖战教唆邱勇增加考试难度..."
+                android:inputType="textPersonName"
+                android:selectAllOnFocus="false"
+                android:singleLine="false"
+                android:textAlignment="center"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageButton2"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
             android:layout_width="match_parent"
-            android:layout_height="33dp"
-            android:background="?attr/colorPrimary" />
-    </com.google.android.material.appbar.AppBarLayout>
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
+            android:background="#FFFFFF"
+            app:layout_anchor="@+id/view_pager"
+            app:layout_anchorGravity="center"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="?attr/colorPrimary"
+                app:tabTextColor="@color/cardview_light_background" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </androidx.viewpager.widget.ViewPager>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
