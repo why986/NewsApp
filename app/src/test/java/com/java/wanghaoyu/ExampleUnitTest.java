@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.java.wanghaoyu;
 
 import org.junit.Test;
 

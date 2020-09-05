@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.main;
+package com.java.wanghaoyu.ui.main;
 
 import android.content.Context;
 
@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.example.myapplication.R;
+import com.java.wanghaoyu.R;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
