@@ -12,7 +12,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import lecho.lib.hellocharts.model.PointValue;
 
 public class MyDataBase {
     private SQLiteDatabase database;
@@ -25,6 +28,9 @@ public class MyDataBase {
         database.execSQL(
                 "CREATE TABLE IF NOT EXISTS news(id text primary key, type text, page integer," +
                         " title text, data text) "
+        );
+        database.execSQL(
+                "CREATE TABLE IF NOT EXISTS covid_data(region text primary key, begin_time text, data text)"
         );
     }
 
@@ -96,12 +102,61 @@ public class MyDataBase {
         return list;
     }
 
-    DetailedNews getDetailedNews(String id) throws JSONException
+    DetailedNews getDetailedNews(String id)
     {
         Cursor cursor = database.rawQuery(
                 "SELECT * FROM news WHERE id=?", new String[]{id});
-        DetailedNews detailedNews = new DetailedNews(new JSONObject(cursor.getString(cursor.getColumnIndex("data"))));
+        DetailedNews detailedNews = null;
+        try {
+            detailedNews = new DetailedNews(new JSONObject(cursor.getString(cursor.getColumnIndex("data"))));
+        }catch (JSONException e){
+            Log.d("getDetailedNews ", e.toString());
+        }
         cursor.close();
-        return  detailedNews;
+        return detailedNews;
+    }
+
+    void initCovidData(String rawData)
+    {
+        try{
+            JSONObject data = new JSONObject(rawData);
+            for (Iterator<String> it = data.keys(); it.hasNext(); ) {
+                String region = it.next();
+                JSONObject regionData = data.getJSONObject(region);
+                database.execSQL(
+                        "INSERT OR REPLACE INTO covid_data (region, begin_time, data) VALUES(?, ?, ?)",
+                        new String[]{
+                                DatabaseUtils.sqlEscapeString(region),
+                                DatabaseUtils.sqlEscapeString(regionData.getString("begin")),
+                                DatabaseUtils.sqlEscapeString(regionData.getString("data"))
+                        });
+            }
+        }catch (JSONException e){
+            Log.d("initCovidData ", e.toString());
+        }
+    }
+
+    public String getBeginTimeAndPointValues(List<PointValue> confirmedPointValues, List<PointValue> curedPointValues, List<PointValue> deadPointValues, String region)
+    {
+        String begin_time = null;
+        Cursor cursor = database.rawQuery(
+                "SELECT * FROM covid_data WHERE region=?",
+                new String[]{region});
+        while (cursor.moveToNext()) {
+            try {
+                begin_time = cursor.getString(cursor.getColumnIndex("begin_time"));
+                JSONArray data = new JSONArray(cursor.getString(cursor.getColumnIndex("data")));
+                for(int i = 0; i < data.length(); ++i)
+                {
+                    JSONArray timeData = data.getJSONArray(i);
+                    confirmedPointValues.add(new PointValue(i, Integer.parseInt(timeData.getString(0))));
+                    curedPointValues.add(new PointValue(i, Integer.parseInt(timeData.getString(2))));
+                    deadPointValues.add(new PointValue(i, Integer.parseInt(timeData.getString(3))));
+                }
+            }catch (JSONException e){
+                Log.d("getPointValues", e.toString());
+            }
+        }
+        return begin_time;
     }
 }

@@ -36,12 +36,13 @@ public class Manager {
     }
 
     private MyDataBase dataBase;
+    private boolean hasInitCovidData;
 
-    private static JSONObject covidData;
 
     private Manager(Context context) throws IOException
     {
         this.dataBase = new MyDataBase(context);
+        hasInitCovidData = false;
     }
 
     public interface CallBack{
@@ -50,10 +51,8 @@ public class Manager {
         void onSuccess(String data);
     }
 
-    private void CallNewsList(String type, int page, int size, final CallBack callBack)
+    private void connectToInterface(String url, final CallBack callBack)
     {
-        String url = "https://covid-dashboard.aminer.cn/api/events/list"
-                + "?type=" + type + "&page=" + page + "&size=" + size;
         Log.d("GetSimpleNewsList", url);
         OkHttpClient okHttpClient = new OkHttpClient();
         final Request request = new Request.Builder().url(url).get().build();
@@ -82,7 +81,8 @@ public class Manager {
 
     List<SimpleNews> getSimpleNewsList(final String type, final int page, int size)
     {
-        CallNewsList(type, page, size, new CallBack() {
+        connectToInterface("https://covid-dashboard.aminer.cn/api/events/list"
+                + "?type=" + type + "&page=" + page + "&size=" + size, new CallBack() {
             @Override
             public void timeout() {
                 Log.d("getSimpleNewsList", "timeout");
@@ -102,16 +102,17 @@ public class Manager {
         return dataBase.getListSimpleNews(type, page);
     }
 
-    List<SimpleNews> searchSimpleNews(final String type, final String keyWord)throws JSONException{
-        CallNewsList(type, 1, 100, new CallBack() {
+    List<SimpleNews> searchSimpleNews(final String type, final String keyWord){
+        connectToInterface("https://covid-dashboard.aminer.cn/api/events/list"
+                + "?type=" + type + "&page=" + 1 + "&size=" + 100, new CallBack() {
             @Override
             public void timeout() {
-
+                Log.d("getSimpleNewsList", "timeout");
             }
 
             @Override
             public void error() {
-
+                Log.d("getSimpleNewsList", "error");
             }
 
             @Override
@@ -126,14 +127,14 @@ public class Manager {
                             dataBase.insertSimpleNews(type, 1001, newsData);
                     }
                 }catch (JSONException e){
-
+                    Log.d("searchSimpleNews ", e.toString());
                 }
             }
         });
         return dataBase.getListSimpleNews(type, 1001);
     }
 
-    DetailedNews getDetailedNews(String id) throws JSONException
+    DetailedNews getDetailedNews(String id)
     {
         return dataBase.getDetailedNews(id);
     }
@@ -150,30 +151,28 @@ public class Manager {
         context.startActivity(Intent.createChooser(intent, "Share to:"));
     }
 
-    public void getPointValues(List<PointValue> confirmedPointValues, List<PointValue> curedPointValues, List<PointValue> deadPointValues, String region)
+    public String getBeginTimeAndPointValues(List<PointValue> confirmedPointValues, List<PointValue> curedPointValues, List<PointValue> deadPointValues, String region)
     {
-        if(covidData == null)
+        if(hasInitCovidData == false)
         {
-            String url = "https://covid-dashboard.aminer.cn/api/dist/epidemic.json";
-            OkHttpClient okHttpClient = new OkHttpClient();
-            final Request request = new Request.Builder().url(url).get().build();
-            Call call = okHttpClient.newCall(request);
-            call.enqueue(new Callback() {
+            hasInitCovidData = true;
+            connectToInterface("https://covid-dashboard.aminer.cn/api/dist/epidemic.json", new CallBack() {
                 @Override
-                public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                    Log.d("SearchSimpleNews", " Failed ");
+                public void timeout()  {
+                    Log.d("getSimpleNewsList", "timeout");
                 }
 
                 @Override
-                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    try {
-                        covidData = new JSONObject(response.body().string());
-                    }catch (JSONException e)
-                    {
+                public void error() {
+                    Log.d("getSimpleNewsList", "error");
+                }
 
-                    }
+                @Override
+                public void onSuccess(String data) {
+                    dataBase.initCovidData(data);
                 }
             });
         }
+        return dataBase.getBeginTimeAndPointValues(confirmedPointValues, curedPointValues, deadPointValues, region);
     }
 }

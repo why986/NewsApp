@@ -40,13 +40,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         manager = Manager.getInstance(this);
-        try {
-//            List<SimpleNews> news_list = manager.getSimpleNewsList("news", 1, 20);
-            NewsItemAdapter newsItemAdapter = new NewsItemAdapter(this, R.layout.news_item, news_list);
-            ListView listView = (ListView) findViewById(R.id.news_list_view);
-            listView.setAdapter(newsItemAdapter);
-        }catch (JSONException e) {}
-        
+        List<SimpleNews> news_list = manager.getSimpleNewsList("news", 1, 20);
+        NewsItemAdapter newsItemAdapter = new NewsItemAdapter(this, R.layout.news_item, news_list);
+        ListView listView = (ListView) findViewById(R.id.news_list_view);
+        listView.setAdapter(newsItemAdapter);
+
     }
 
 /*
