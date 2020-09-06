@@ -4,13 +4,13 @@ import org.json.JSONObject;
 import org.json.JSONException;
 
 public class SimpleNews {
-    String id;
-    String title;
-    String time;
-    String date;
-    String content;
-    String type;
-    String source;
+    public String id;
+    public String title;
+    public String time;
+    public String date;
+    public String content;
+    public String type;
+    public String source;
 
     public SimpleNews()
     {
