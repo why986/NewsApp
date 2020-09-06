@@ -1,28 +1,29 @@
 package com.java.wanghaoyu;
 
-import org.json.JSONObject;
 import org.json.JSONException;
+import org.json.JSONObject;
 
-public class News{
+public class DetailedNews {
     String id;
     String title;
     String time;
     String date;
     String content;
-    String type;
     String source;
+    String authors;
 
-    public News()
+    public DetailedNews()
     {
 
     }
 
-    public News(JSONObject data) throws JSONException{
+    public DetailedNews(JSONObject data) throws JSONException {
         this.id = data.getString("_id");
         this.title = data.getString("title");
         this.time = data.getString("time");
         this.date = data.getString("date");
         this.content = data.getString("content");
-        this.type = data.getString("type");
+        this.source = data.getString("source");
+        this.authors = data.getString("authors");
     }
 }
