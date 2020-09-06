@@ -14,6 +14,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.java.wanghaoyu.ui.main.SectionsPagerAdapter;
 
+import org.json.JSONException;
+
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,7 +35,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         manager = Manager.getInstance(this);
-
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<SimpleNews> list = manager.getSimpleNewsList("news", 1, 2);
+            }
+        }).start();
     }
 
 /*
