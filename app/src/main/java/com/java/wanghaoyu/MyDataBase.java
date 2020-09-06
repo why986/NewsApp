@@ -22,7 +22,22 @@ public class MyDataBase {
         database = SQLiteDatabase.openOrCreateDatabase(databasePath, null);
 
         database.execSQL(
-                "CREATE TABLE IF NOT EXISTS `news`(type string, id string, page integer, data text, PRIMARY KEY(type, page)) "
+                "CREATE TABLE IF NOT EXISTS `news`(type string, id string, page integer," +
+                        " title text, data text, PRIMARY KEY(type, page)) "
+        );
+    }
+
+    void insertSimpleNews(String type, int page, JSONObject data) throws JSONException
+    {
+        database.execSQL(
+                String.format(
+                        "INSERT OR REPLACE INTO `news` (type, id, page, title, data) VALUES(%s, %s, %s, %s, %s)",
+                        DatabaseUtils.sqlEscapeString(type),
+                        DatabaseUtils.sqlEscapeString(data.getString("_id")),
+                        String.valueOf(page),
+                        DatabaseUtils.sqlEscapeString(data.getString("title")),
+                        DatabaseUtils.sqlEscapeString(data.toString())
+                )
         );
     }
 
@@ -35,16 +50,18 @@ public class MyDataBase {
             JSONObject newsJson = newsArray.getJSONObject(i);
             database.execSQL(
                     String.format(
-                            "INSERT OR REPLACE INTO `news` (type, id, page, data) VALUES(%s, %s, %s, %s)",
+                            "INSERT OR REPLACE INTO `news` (type, id, page, title, data) VALUES(%s, %s, %s, %s, %s)",
                             DatabaseUtils.sqlEscapeString(type),
                             DatabaseUtils.sqlEscapeString(newsJson.getString("_id")),
                             String.valueOf(page),
+                            DatabaseUtils.sqlEscapeString(newsJson.getString("title")),
                             DatabaseUtils.sqlEscapeString(newsJson.toString())
                     )
             );
         }
 
     }
+
 
     List<SimpleNews> getListSimpleNews(String type, int page) throws JSONException
     {

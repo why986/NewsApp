@@ -11,18 +11,9 @@ import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.View;
 
 import com.java.wanghaoyu.ui.main.SectionsPagerAdapter;
 
-import org.json.JSONException;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 
 public class MainActivity extends AppCompatActivity {
 
