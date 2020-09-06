@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">News App</string>
-    <string name="tab_text_1">News</string>
-    <string name="tab_text_2">Paper</string>
+    <string name="app_name">News: COVID-19</string>
+    <string name="tab_news">News</string>
+    <string name="tab_paper">Paper</string>
+    <string name="tab_event">Event</string>
 </resources>
