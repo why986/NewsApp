@@ -1,22 +1,18 @@
 package com.java.wanghaoyu;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
+import android.widget.Adapter;
 import android.widget.ListView;
 
-import com.java.wanghaoyu.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 
+import com.google.android.material.tabs.TabLayout;
 import com.java.wanghaoyu.ui.main.NewsItemAdapter;
-import com.java.wanghaoyu.ui.main.SectionsPagerAdapter;
+import com.java.wanghaoyu.ui.main.NewsListFragment;
+import com.java.wanghaoyu.ui.main.ViewPagerAdapter;
 
 import org.json.JSONException;
 
@@ -32,11 +28,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(sectionsPagerAdapter);
-        TabLayout tabs = findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
+        ViewPager viewpager = (ViewPager) findViewById(R.id.viewpager);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewpager);
+
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        String type = "news";
+        adapter.addFragment(new NewsListFragment(type), type);
+        type = "paper";
+        adapter.addFragment(new NewsListFragment(type), type);
+        viewpager.setAdapter(adapter);
+
+
+
 
 
 
@@ -47,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(newsItemAdapter);
 
     }
+
+
+
 
 /*
     private static class Task extends AsyncTask<Void, Void, Task.Result> {
