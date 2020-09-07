@@ -19,6 +19,7 @@ import java.util.Objects;
 
 public class NewsListFragment extends Fragment {
     String type;
+    List<SimpleNews> news_list;
     public NewsListFragment(String type){
         this.type = type;
     }
@@ -28,13 +29,15 @@ public class NewsListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.new_list_fragment, container, false);
-        try {
-            Manager manager = Manager.getInstance(this.getContext());
-            List<SimpleNews> news_list = manager.getSimpleNewsList(type, 1, 20);
-            NewsItemAdapter newsItemAdapter = new NewsItemAdapter(this.getContext(), R.layout.news_item, news_list);
-            ListView listView = (ListView) Objects.requireNonNull(getView()).findViewById(R.id.news_list_view);
-            listView.setAdapter(newsItemAdapter);
-        }catch (JSONException e) { }
+        Manager manager = Manager.getInstance(view.getContext());
+        List<SimpleNews> news_list = manager.getSimpleNewsList(type, 1, 20);
+
+        System.out.println("SIMPLE NEW SIZE:  "+news_list.size());
+
+        NewsItemAdapter newsItemAdapter = new NewsItemAdapter(getActivity(), news_list);
+        ListView listView = (ListView) view.findViewById(R.id.news_list_view);
+        listView.setAdapter(newsItemAdapter);
+        newsItemAdapter.notifyDataSetChanged();
 
         return view;
     }

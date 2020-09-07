@@ -79,7 +79,7 @@ public class Manager {
         Log.d("GetSimpleNewsList", url);
     }
 
-    List<SimpleNews> getSimpleNewsList(final String type, final int page, int size)
+    public List<SimpleNews> getSimpleNewsList(final String type, final int page, int size)
     {
         connectToInterface("https://covid-dashboard.aminer.cn/api/events/list"
                 + "?type=" + type + "&page=" + page + "&size=" + size, new CallBack() {

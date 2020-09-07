@@ -31,24 +31,17 @@ public class MainActivity extends AppCompatActivity {
         ViewPager viewpager = (ViewPager) findViewById(R.id.viewpager);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewpager);
-
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         String type = "news";
         adapter.addFragment(new NewsListFragment(type), type);
         type = "paper";
         adapter.addFragment(new NewsListFragment(type), type);
+//        type = "event";
+//        adapter.addFragment(new NewsListFragment(type), type);
+//        type = "啊这";
+//        adapter.addFragment(new NewsListFragment(type), type);
         viewpager.setAdapter(adapter);
 
-
-
-
-
-
-        manager = Manager.getInstance(this);
-        List<SimpleNews> news_list = manager.getSimpleNewsList("news", 1, 20);
-        NewsItemAdapter newsItemAdapter = new NewsItemAdapter(this, R.layout.news_item, news_list);
-        ListView listView = (ListView) findViewById(R.id.news_list_view);
-        listView.setAdapter(newsItemAdapter);
 
     }
 
