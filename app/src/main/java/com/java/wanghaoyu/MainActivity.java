@@ -1,12 +1,18 @@
 package com.java.wanghaoyu;
 
 import android.os.Bundle;
+import android.widget.Adapter;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 
+import com.google.android.material.tabs.TabLayout;
 import com.java.wanghaoyu.ui.main.NewsItemAdapter;
+import com.java.wanghaoyu.ui.main.NewsListFragment;
+import com.java.wanghaoyu.ui.main.ViewPagerAdapter;
 
 import org.json.JSONException;
 
@@ -22,23 +28,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-//        ViewPager viewPager = findViewById(R.id.view_pager);
-//        viewPager.setAdapter(sectionsPagerAdapter);
-//        TabLayout tabs = findViewById(R.id.tabs);
-//        tabs.setupWithViewPager(viewPager);
+        ViewPager viewpager = (ViewPager) findViewById(R.id.viewpager);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewpager);
+
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        String type = "news";
+        adapter.addFragment(new NewsListFragment(type), type);
 
 
-        manager = Manager.getInstance(this);
-        try {
-            List<SimpleNews> news_list = manager.getSimpleNewsList("news", 1, 20);
-            NewsItemAdapter newsItemAdapter = new NewsItemAdapter(this, R.layout.news_item, news_list);
-            ListView listView = (ListView) findViewById(R.id.news_list_view);
-            listView.setAdapter(newsItemAdapter);
-        }catch (JSONException e) { }
+
 
 
     }
+
+
+
 
 /*
     private static class Task extends AsyncTask<Void, Void, Task.Result> {

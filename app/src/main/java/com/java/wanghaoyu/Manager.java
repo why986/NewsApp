@@ -42,7 +42,7 @@ public class Manager {
         this.dataBase = new MyDataBase(context);
     }
 
-    List<SimpleNews> getSimpleNewsList(final String type, final int page, int size) throws JSONException
+    public List<SimpleNews> getSimpleNewsList(final String type, final int page, int size) throws JSONException
     {
         String url = "https://covid-dashboard.aminer.cn/api/events/list"
                 + "?type=" + type + "&page=" + page + "size=" + size;
