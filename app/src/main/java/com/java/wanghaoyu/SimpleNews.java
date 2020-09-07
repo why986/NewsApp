@@ -7,8 +7,6 @@ public class SimpleNews {
     public String id;
     public String title;
     public String time;
-    public String date;
-    public String content;
     public String type;
     public String source;
 
@@ -17,12 +15,15 @@ public class SimpleNews {
 
     }
 
+    public SimpleNews(String id, String title, String time, String type, String source)
+    {
+        this.id = id; this.title = title; this.time = time; this.type = type; this.source = source;
+    }
+
     public SimpleNews(JSONObject data) throws JSONException{
         this.id = data.getString("_id");
         this.title = data.getString("title");
         this.time = data.getString("time");
-        this.date = data.getString("date");
-        this.content = data.getString("content");
         this.type = data.getString("type");
         this.source = data.getString("source");
     }
