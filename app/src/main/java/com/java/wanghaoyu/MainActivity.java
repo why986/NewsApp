@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         tabs.setupWithViewPager(viewPager);
 
 
+
         manager = Manager.getInstance(this);
         List<SimpleNews> news_list = manager.getSimpleNewsList("news", 1, 20);
         NewsItemAdapter newsItemAdapter = new NewsItemAdapter(this, R.layout.news_item, news_list);
