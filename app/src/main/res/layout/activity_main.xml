@@ -19,7 +19,7 @@
         android:background="@android:color/transparent" />
 
     <include
-        layout="@layout/menu"
+        layout="@layout/sidebar_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start" />
