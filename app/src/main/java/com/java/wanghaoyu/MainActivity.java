@@ -35,6 +35,11 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         String type = "news";
         adapter.addFragment(new NewsListFragment(type), type);
+        type = "paper";
+        adapter.addFragment(new NewsListFragment(type), type);
+        viewpager.setAdapter(adapter);
+
+
 
 
 

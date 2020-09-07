@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
-    List<String> newsListType;
+    List<String> newsListType = new ArrayList<String>();
     private final List<Fragment> mFragments = new ArrayList<>();
 
     public ViewPagerAdapter(FragmentManager supportFragmentManager) {
@@ -36,6 +36,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
+//        return "news";
         return newsListType.get(position);
     }
 }
