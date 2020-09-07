@@ -79,27 +79,42 @@ public class Manager {
         Log.d("GetSimpleNewsList", url);
     }
 
+    public SimpleNews getNew(String s){
+        SimpleNews n1 = new SimpleNews();
+        n1.title = s+"title";
+        n1.date = s+"date";
+        n1.source = s+"source";
+        n1.content = s+"content";
+        n1.type = s;
+        return n1;
+    }
+
     public List<SimpleNews> getSimpleNewsList(final String type, final int page, int size)
     {
-        connectToInterface("https://covid-dashboard.aminer.cn/api/events/list"
-                + "?type=" + type + "&page=" + page + "&size=" + size, new CallBack() {
-            @Override
-            public void timeout() {
-                Log.d("getSimpleNewsList", "timeout");
-            }
-
-            @Override
-            public void error() {
-                Log.d("getSimpleNewsList", "error");
-            }
-
-            @Override
-            public void onSuccess(String data) {
-                Log.d("callBack onSuccess ", data);
-                dataBase.insertNewsList(type, page, data);
-            }
-        });
-        return dataBase.getListSimpleNews(type, page);
+        List<SimpleNews> res = new ArrayList<SimpleNews>();
+        for(int i=0;i<20;i++){
+            res.add(getNew(type + " "+Integer.toString(i) +"_"));
+        }
+        return res;
+//        connectToInterface("https://covid-dashboard.aminer.cn/api/events/list"
+//                + "?type=" + type + "&page=" + page + "&size=" + size, new CallBack() {
+//            @Override
+//            public void timeout() {
+//                Log.d("getSimpleNewsList", "timeout");
+//            }
+//
+//            @Override
+//            public void error() {
+//                Log.d("getSimpleNewsList", "error");
+//            }
+//
+//            @Override
+//            public void onSuccess(String data) {
+//                Log.d("callBack onSuccess ", data);
+//                dataBase.insertNewsList(type, page, data);
+//            }
+//        });
+//        return dataBase.getListSimpleNews(type, page);
     }
 
     List<SimpleNews> searchSimpleNews(final String type, final String keyWord){

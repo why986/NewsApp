@@ -45,7 +45,7 @@ public class NewsItemAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
-        @SuppressLint("ViewHolder") View oneNewsView = LayoutInflater.from(mContext).inflate(R.id.news_item, parent, false);
+        View oneNewsView = LayoutInflater.from(mContext).inflate(R.layout.news_item, parent, false);
         TextView t1 = (TextView) oneNewsView.findViewById(R.id.textView_news_title);
         TextView t2 = (TextView) oneNewsView.findViewById(R.id.textView_news_source);
         TextView t3 = (TextView) oneNewsView.findViewById(R.id.textView_news_date);
