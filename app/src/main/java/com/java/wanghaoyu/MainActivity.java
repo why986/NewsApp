@@ -1,22 +1,12 @@
 package com.java.wanghaoyu;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.java.wanghaoyu.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 
 import com.java.wanghaoyu.ui.main.NewsItemAdapter;
-import com.java.wanghaoyu.ui.main.SectionsPagerAdapter;
 
 import org.json.JSONException;
 
@@ -32,20 +22,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(sectionsPagerAdapter);
-        TabLayout tabs = findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
+//        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+//        ViewPager viewPager = findViewById(R.id.view_pager);
+//        viewPager.setAdapter(sectionsPagerAdapter);
+//        TabLayout tabs = findViewById(R.id.tabs);
+//        tabs.setupWithViewPager(viewPager);
 
 
         manager = Manager.getInstance(this);
         try {
-//            List<SimpleNews> news_list = manager.getSimpleNewsList("news", 1, 20);
+            List<SimpleNews> news_list = manager.getSimpleNewsList("news", 1, 20);
             NewsItemAdapter newsItemAdapter = new NewsItemAdapter(this, R.layout.news_item, news_list);
             ListView listView = (ListView) findViewById(R.id.news_list_view);
             listView.setAdapter(newsItemAdapter);
-        }catch (JSONException e) {}
+        }catch (JSONException e) { }
 
 
     }
