@@ -61,12 +61,18 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
             @Override
             public void onError(String data) {
                 Log.d("manager.getSimpleNewsList", data);
+                if(data.equals("TIMEOUT"))
+                {
+                    news_list = manager.getSimpleNewsListFromDatabase(type, page_count);
+                    recycleViewAdapter = new NewsRecycleViewAdapter(news_list, mcontext);
+                    recyclerView.setAdapter(recycleViewAdapter);
+                }
             }
 
             @Override
             public void onSuccess(List<SimpleNews> data) {
                 news_list = data;
-                manager.insertSimpleNewsList(type, 1, news_list);
+                manager.insertSimpleNewsList(type, page_count, news_list);
                 recycleViewAdapter = new NewsRecycleViewAdapter(news_list, mcontext);
                 recyclerView.setAdapter(recycleViewAdapter);
                 recyclerView.addOnScrollListener(new onLoadMoreListener() {
