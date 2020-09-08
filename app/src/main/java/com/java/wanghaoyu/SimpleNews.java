@@ -27,4 +27,5 @@ public class SimpleNews {
         this.type = data.getString("type");
         this.source = data.getString("source");
     }
+
 }

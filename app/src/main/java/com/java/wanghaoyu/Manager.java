@@ -87,7 +87,7 @@ public class Manager {
         @Override
         protected Result doInBackground(Void... voids) {
             try {
-
+                Log.d("doInBackground", "okk");
                 URL url = new URL(urlStr);
                 HttpsTrustManager.allowAllSSL();
                 HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
@@ -97,6 +97,7 @@ public class Manager {
                 connection.setConnectTimeout(10000);
                 connection.setRequestMethod("GET");
                 connection.setDoInput(true);
+                Log.d("doInBackground", "okk2");
 // 发起请求
                 connection.connect();
                 if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
@@ -109,9 +110,11 @@ public class Manager {
                 while ((line = reader.readLine()) != null) {
                     builder.append(line);
                 }
+                Log.d("doInBackground", "okk3");
 
                 reader.close();
                 connection.disconnect();
+                Log.d("doInBackground", "okk4");
                 Log.d("READ", builder.toString());
                 String rawData = builder.toString();
 
@@ -120,7 +123,7 @@ public class Manager {
                     Log.d("insertNewsList ", String.format(" type is %s ", type));
                     JSONObject data = new JSONObject(rawData);
                     JSONArray newsArray = data.getJSONArray("data");
-                    //Log.d("insertNewsList", String.valueOf(newsArray.length()));
+                    Log.d("insertNewsList", data.toString());
                     for (int i = 0; i < newsArray.length(); ++i) {
                         JSONObject newsJson = newsArray.getJSONObject(i);
 
@@ -129,23 +132,13 @@ public class Manager {
                                 newsJson.getString("time"),
                                 type,
                                 newsJson.getString("source")));
-                        /*
-                        ContentValues contentValues = new ContentValues();
-                        contentValues.put("id", DatabaseUtils.sqlEscapeString(newsJson.getString("_id")));
-                        contentValues.put("title", DatabaseUtils.sqlEscapeString(newsJson.getString("title")));
-                        contentValues.put("time", DatabaseUtils.sqlEscapeString(newsJson.getString("time")));
-                        contentValues.put("type", DatabaseUtils.sqlEscapeString(type));
-                        contentValues.put("source", DatabaseUtils.sqlEscapeString(newsJson.getString("source")));
-                        contentValues.put("page", page);
-
-                         */
-                        //Log.d("insertNewsList ", String.format(" id is %s ", newsJson.getString("_id")));
-                        //Log.d("insertNewsList", String.format(" type is %s ", type));
+                        Log.d("READ", String.valueOf(i));
                     }
                 }catch (JSONException e)
                 {
                     Log.d("insertNewsList", e.toString());
                 }
+                Log.d("READ", "size is " + String.valueOf(newsList.size()));
                 return new Result(newsList);
             }catch (Exception e){
                 Log.d("READ", e.toString());
@@ -162,33 +155,6 @@ public class Manager {
         }
     }
 
-    private void connectToInterface(String url, final MyCallBack myCallBack)
-    {
-        Log.d("connectToInterface", url);
-        OkHttpClient okHttpClient = new OkHttpClient();
-        final Request request = new Request.Builder().url(url).get().build();
-        Call call = okHttpClient.newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.d("connectToInterface", " Failed");
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try {
-                    //Log.d("okHttp ", response.body().string());
-                    myCallBack.onSuccess(response.body().string());
-                }catch (Exception e)
-                {
-                    Log.d("connectToInterface ", e.toString());
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        Log.d("connectToInterface", url);
-    }
 
     public void insertSimpleNewsList(String type, int page, List<SimpleNews> newsList)
     {
@@ -206,8 +172,7 @@ public class Manager {
         }
     }
 
-    public void getSimpleNewsList(SimpleNewsCallBack simpleNewsCallBack, final String type, final int page, int size)
-    {
+    public void getSimpleNewsList(SimpleNewsCallBack simpleNewsCallBack, final String type, final int page, int size) {
         new MyTask(simpleNewsCallBack, "https://covid-dashboard.aminer.cn/api/events/list"
                 + "?type=" + type + "&page=" + page + "&size=" + size, type, page).execute();
         /*
@@ -239,7 +204,7 @@ public class Manager {
         cursor.close();
 
          */
-        return ;
+        return;
     }
 
     /*

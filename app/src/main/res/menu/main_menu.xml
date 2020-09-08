@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="ExtraText">
+
+    <item
+        android:id="@+id/menu_item_minus"
+        android:orderInCategory="2"
+        android:title="@string/menu_minus"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_item_add_all"
+        android:orderInCategory="1"
+        android:title="添加种类ALL"
+        app:showAsAction="never" />
+    ​
+    <item
+        android:id="@+id/menu_item_add_news"
+        android:orderInCategory="1"
+        android:title="添加种类NEWS"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_item_add_event"
+        android:orderInCategory="1"
+        android:title="添加种类EVENT"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_item_add_points"
+        android:orderInCategory="1"
+        android:title="添加种类POINTS"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_item_add_paper"
+        android:orderInCategory="1"
+        android:title="添加种类PAPER"
+        app:showAsAction="never" />
+</menu>

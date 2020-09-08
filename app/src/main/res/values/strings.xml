@@ -3,4 +3,6 @@
     <string name="tab_news">News</string>
     <string name="tab_paper">Paper</string>
     <string name="tab_event">Event</string>
+    <string name="menu_add">增加种类</string>
+    <string name="menu_minus">减少种类</string>
 </resources>

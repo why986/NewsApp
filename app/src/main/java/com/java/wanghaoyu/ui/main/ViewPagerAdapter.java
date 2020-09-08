@@ -24,7 +24,17 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public void addFragment(Fragment fragment, String type) {
         this.newsListType.add(type);
         this.mFragments.add(fragment);
+        notifyDataSetChanged();
     }
+
+    public void delFragment(){
+        if(newsListType.size() <= 1) return;
+        newsListType.remove(newsListType.size()-1);
+        mFragments.remove(newsListType.size()-1);
+        notifyDataSetChanged();
+    }
+
+
 
     @Override
     public Fragment getItem(int position) {
