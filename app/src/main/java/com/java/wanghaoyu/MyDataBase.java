@@ -26,8 +26,8 @@ public class MyDataBase {
         database = SQLiteDatabase.openOrCreateDatabase(databasePath, null);
 
         database.execSQL(
-                "CREATE TABLE IF NOT EXISTS news(id text primary key, type text, page integer," +
-                        " title text, data text) "
+                "CREATE TABLE IF NOT EXISTS simpleNews(id text primary key, title text, " +
+                        "time text, type text, source text, page integer)"
         );
         database.execSQL(
                 "CREATE TABLE IF NOT EXISTS covid_data(region text primary key, begin_time text, data text)"
@@ -37,13 +37,14 @@ public class MyDataBase {
     void insertSimpleNews(String type, int page, JSONObject data) throws JSONException
     {
         database.execSQL(
-                        "INSERT OR REPLACE INTO news (id, type, page, title, data) VALUES(?, ?, ?, ?, ?)",
+                        "INSERT OR REPLACE INTO simpleNews (id, title, time, type, source, page) VALUES(?, ?, ?, ?, ?, ?)",
                         new String[]{
                                 DatabaseUtils.sqlEscapeString(data.getString("_id")),
-                                type,
-                                String.valueOf(page),
                                 DatabaseUtils.sqlEscapeString(data.getString("title")),
-                                DatabaseUtils.sqlEscapeString(data.toString())
+                                DatabaseUtils.sqlEscapeString(data.getString("time")),
+                                DatabaseUtils.sqlEscapeString(type),
+                                DatabaseUtils.sqlEscapeString(data.getString("source")),
+                                String.valueOf(page)
                         });
     }
 
@@ -53,20 +54,12 @@ public class MyDataBase {
             Log.d("insertNewsList ", String.format(" type is %s ", type));
             JSONObject data = new JSONObject(rawData);
             JSONArray newsArray = data.getJSONArray("data");
-            Log.d("insertNewsList", String.valueOf(newsArray.length()));
+            //Log.d("insertNewsList", String.valueOf(newsArray.length()));
             for (int i = 0; i < newsArray.length(); ++i) {
                 JSONObject newsJson = newsArray.getJSONObject(i);
-                database.execSQL(
-                                "INSERT OR REPLACE INTO news (id, type, page, title, data) VALUES(?, ?, ?, ?, ?)",
-                                new String[]{
-                                        DatabaseUtils.sqlEscapeString(newsJson.getString("_id")),
-                                        type,
-                                        String.valueOf(page),
-                                        DatabaseUtils.sqlEscapeString(newsJson.getString("title")),
-                                        DatabaseUtils.sqlEscapeString(newsJson.toString())
-                                });
-                Log.d("insertNewsList ", String.format(" id is %s ", newsJson.getString("_id")));
-                Log.d("insertNewsList", String.format(" type is %s ", type));
+                insertSimpleNews(type, page, newsJson);
+                //Log.d("insertNewsList ", String.format(" id is %s ", newsJson.getString("_id")));
+                //Log.d("insertNewsList", String.format(" type is %s ", type));
             }
         }catch (JSONException e)
         {
@@ -77,21 +70,34 @@ public class MyDataBase {
 
     List<SimpleNews> getListSimpleNews(String type, int page)
     {
+        Log.d("getListSimpleNews ", "fuck off");
         List<SimpleNews> list = new ArrayList<>();
         try {
-            Cursor cursor = database.rawQuery(//"SELECT * FROM news",
-                    "SELECT * FROM news WHERE type=? AND page=?",
-                            new String[]{
-                            type, String.valueOf(page)
-            });
+            Cursor cursor = database.rawQuery(
+                    "SELECT * FROM simpleNews WHERE type = ?",
+                            new String[]{type}
+            );
             while (cursor.moveToNext()) {
-                Log.d("getListSimpleNews ", String.format("(type, id, page, title, data) VALUES(%s, %s, %s, %s, %s)",
+
+                Log.d("getListSimpleNews ", String.format("(type, id, page, title, source) VALUES(%s, %s, %s, %s, %s) type is %s and page is %s",
                         cursor.getString(cursor.getColumnIndex("type")),
                         cursor.getString(cursor.getColumnIndex("id")),
-                        cursor.getString(cursor.getColumnIndex("page")),
+                        cursor.getInt(cursor.getColumnIndex("page")),
                         cursor.getString(cursor.getColumnIndex("title")),
-                        cursor.getString(cursor.getColumnIndex("data"))));
-                list.add(new SimpleNews(new JSONObject(cursor.getString(cursor.getColumnIndex("data")))));
+                        cursor.getString(cursor.getColumnIndex("source")),
+                        type,
+                        String.valueOf(page)));
+
+
+                //System.out.println(cursor.getColumnCount());
+                //for(int j = 0; j < 5; ++j) System.out.println(cursor.getColumnName(j));
+                System.out.println(cursor.getColumnIndex("id") + " " + cursor.getColumnIndex("title") + " "
+                        + cursor.getColumnIndex("time") + " " + cursor.getColumnIndex("type") + " " + cursor.getColumnIndex("source"));
+                list.add(new SimpleNews(cursor.getString(cursor.getColumnIndex("id")),
+                        cursor.getString(cursor.getColumnIndex("title")),
+                        cursor.getString(cursor.getColumnIndex("time")),
+                        cursor.getString(cursor.getColumnIndex("type")),
+                        cursor.getString(cursor.getColumnIndex("source"))));
             }
             cursor.close();
         }catch (Exception e)

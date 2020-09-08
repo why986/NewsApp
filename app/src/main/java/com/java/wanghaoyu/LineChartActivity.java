@@ -36,7 +36,7 @@ public class LineChartActivity extends AppCompatActivity {
 
         lineChartView = (LineChartView) findViewById(R.id.line_chart);
         manager = Manager.getInstance(this);
-        String begin_time = manager.getBeginTimeAndPointValues(confirmedPointValues, curedPointValues, deadPointValues, "[CHINA]");
+        //String begin_time = manager.getBeginTimeAndPointValues(confirmedPointValues, curedPointValues, deadPointValues, "[CHINA]");
     }
 
     private void initLineChart()

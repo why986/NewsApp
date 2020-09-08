@@ -1,6 +1,7 @@
 package com.java.wanghaoyu.ui.main;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,8 @@ import java.util.Objects;
 
 public class NewsListFragment extends Fragment {
     String type;
-    List<SimpleNews> news_list;
+
+    View view;
     public NewsListFragment(String type){
         this.type = type;
     }
@@ -28,17 +30,30 @@ public class NewsListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.new_list_fragment, container, false);
-        Manager manager = Manager.getInstance(view.getContext());
-        List<SimpleNews> news_list = manager.getSimpleNewsList(type, 1, 20);
+        view =  inflater.inflate(R.layout.new_list_fragment, container, false);
 
-        System.out.println("SIMPLE NEW SIZE:  "+news_list.size());
+        final Manager manager = Manager.getInstance(view.getContext());
+        manager.getSimpleNewsList(new Manager.SimpleNewsCallBack() {
+            @Override
+            public void onError(String data) {
+                Log.d("manager.getSimpleNewsList", data);
+            }
 
-        NewsItemAdapter newsItemAdapter = new NewsItemAdapter(getActivity(), news_list);
-        ListView listView = (ListView) view.findViewById(R.id.news_list_view);
-        listView.setAdapter(newsItemAdapter);
-        newsItemAdapter.notifyDataSetChanged();
+            @Override
+            public void onSuccess(List<SimpleNews> news_list) {
+                System.out.println("SIMPLE NEW SIZE:  "+news_list.size());
 
+                NewsItemAdapter newsItemAdapter = new NewsItemAdapter(getActivity(), news_list);
+                ListView listView = (ListView) view.findViewById(R.id.news_list_view);
+                listView.setAdapter(newsItemAdapter);
+                newsItemAdapter.notifyDataSetChanged();
+                manager.insertSimpleNewsList(type, 1, news_list);
+            }
+        }, type, 1, 6);
+
+
+/*
+ */
         return view;
     }
 }

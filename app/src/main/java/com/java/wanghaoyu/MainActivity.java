@@ -1,22 +1,32 @@
 package com.java.wanghaoyu;
 
 import android.os.Bundle;
-import android.widget.Adapter;
-import android.widget.ListView;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
 
 
 import com.google.android.material.tabs.TabLayout;
-import com.java.wanghaoyu.ui.main.NewsItemAdapter;
 import com.java.wanghaoyu.ui.main.NewsListFragment;
 import com.java.wanghaoyu.ui.main.ViewPagerAdapter;
 
-import org.json.JSONException;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -28,6 +38,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+/*
+new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                Manager manager = Manager.getInstance(MainActivity.this);
+                List<SimpleNews> news_list = manager.getSimpleNewsList("news", 1, 6);
+            }
+        }).start();
+
+ */
         ViewPager viewpager = (ViewPager) findViewById(R.id.viewpager);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewpager);
@@ -43,6 +64,82 @@ public class MainActivity extends AppCompatActivity {
         viewpager.setAdapter(adapter);
 
 
+        /*
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    URL url = new URL("https://covid-dashboard.aminer.cn/api/events/list?type=news&page=1&size=1");
+                    HttpsTrustManager.allowAllSSL();
+                    HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+                    connection.setAllowUserInteraction(false);
+                    connection.setInstanceFollowRedirects(true);
+                    connection.setReadTimeout(10000);
+                    connection.setConnectTimeout(15000);
+                    connection.setRequestMethod("GET");
+                    connection.setDoInput(true);
+// 发起请求
+                    connection.connect();
+                    if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                        Log.e("HTTPS", "[NewsDetailActivity line 80] NOT OK");
+                    }
+                    BufferedReader reader = new BufferedReader(
+                            new InputStreamReader(connection.getInputStream()));
+                    StringBuilder builder = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        builder.append(line);
+                    }
+
+                    reader.close();
+                    connection.disconnect();
+                    Log.d("READ", builder.toString());
+                }catch (Exception e){
+                    Log.d("READ", e.toString());
+                }
+            }
+        }).start();
+        connectToInterface("https://covid-dashboard.aminer.cn/api/events/list?type=news&page=1&size=1", new Manager.MyCallBack() {
+            @Override
+            public void timeout() {}
+            @Override
+            public void error() {}
+            @Override
+            public void onSuccess(String data) {
+                Log.d("callBack onSuccess ", data);
+            }
+        });
+
+         */
+    }
+    void connectToInterface(String url, final Manager.MyCallBack myCallBack)
+    {
+        Log.d("connectToInterface", url);
+        OkHttpClient okHttpClient = new OkHttpClient().newBuilder().connectTimeout(20000, TimeUnit.MILLISECONDS).build();
+        final Request request = new Request.Builder().url(url).get().build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.d("connectToInterface", " Failed");
+                Log.d("connectToInterface", e.toString());
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try {
+                    //Log.d("okHttp ", response.body().string());
+                    myCallBack.onSuccess(response.body().string());
+                }catch (Exception e)
+                {
+                    Log.d("connectToInterface ", e.toString());
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        Log.d("connectToInterface", url);
     }
 
 

@@ -54,7 +54,7 @@ public class NewsItemAdapter extends BaseAdapter {
 //        System.out.println("TITLE: "+news.title);
         t1.setText(news.title);
         t2.setText(news.source);
-        t3.setText(news.date);
+        t3.setText(news.time);
 //        t1.setText("TITLE");
 //        t2.setText("SOURCE");
 //        t3.setText("DATE");
