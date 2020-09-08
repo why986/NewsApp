@@ -2,13 +2,13 @@ package com.java.wanghaoyu;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,17 +17,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class Manager {
     private static Manager managerInstance = null;
@@ -55,33 +50,59 @@ public class Manager {
         hasInitCovidData = false;
     }
 
-    public interface MyCallBack {
-        void timeout();
-        void error();
-        void onSuccess(String data);
-    }
 
     public interface SimpleNewsCallBack{
         void onError(String data);
         void onSuccess(List<SimpleNews> data);
     }
 
+    public interface DetailedNewsCallBack{
+        void onError(String data);
+        void onSuccess(DetailedNews data);
+    }
+
+    public interface CovidDataCallBack{
+        void onError(String data);
+        void onSuccess(JSONObject data);
+    }
+
     private static class MyTask extends AsyncTask<Void, Void, MyTask.Result> {
-        SimpleNewsCallBack myCallBack;
+        SimpleNewsCallBack simpleNewsCallBack;
+        DetailedNewsCallBack detailedNewsCallBack;
+        CovidDataCallBack covidDataCallBack;
         String urlStr;
         String type;
         int page;
-        MyTask(SimpleNewsCallBack myCallBack, String urlStr, String type, int page){
-            this.myCallBack = myCallBack; this.urlStr = urlStr; this.type = type; this.page = page;
+        String keyword;
+        String region;
+
+        MyTask(SimpleNewsCallBack simpleNewsCallBack, String urlStr, String type, int page){
+            this.simpleNewsCallBack = simpleNewsCallBack; this.urlStr = urlStr; this.type = type; this.page = page;
+        }
+
+        MyTask(DetailedNewsCallBack detailedNewsCallBack, String urlStr){
+            this.detailedNewsCallBack = detailedNewsCallBack; this.urlStr = urlStr; this.type = "DetailedNews"; this.page = -1;
+        }
+
+        MyTask(SimpleNewsCallBack simpleNewsCallBack, String urlStr, String keyword){
+            this.simpleNewsCallBack = simpleNewsCallBack; this.urlStr = urlStr; this.type = "Search"; this.keyword = keyword;
+        }
+
+        MyTask(CovidDataCallBack covidDataCallBack, String urlStr, String region){
+            this.covidDataCallBack = covidDataCallBack; this.urlStr = urlStr; this.region = region; this.type = "CovidData";
         }
 
         static class Result{
             public List<SimpleNews> data;
             public String errorData;
+            public DetailedNews detailedNewsData;
+            public JSONObject covidData;
             public Result(List<SimpleNews> data){
                 this.data = data;
             }
             public Result(String errorData) {this.errorData = errorData;}
+            public Result(DetailedNews detailedNewsData) {this.detailedNewsData = detailedNewsData;}
+            public Result(JSONObject covidData) {this.covidData = covidData;}
         }
 
         @Override
@@ -111,29 +132,47 @@ public class Manager {
 
                 reader.close();
                 connection.disconnect();
-                Log.d("READ", builder.toString());
+                //Log.d("READ", builder.toString());
                 String rawData = builder.toString();
 
-                List<SimpleNews> newsList = new ArrayList<>();
-                try {
-                    Log.d("insertNewsList ", String.format(" type is %s ", type));
-                    JSONObject data = new JSONObject(rawData);
-                    JSONArray newsArray = data.getJSONArray("data");
-                    for (int i = 0; i < newsArray.length(); ++i) {
-                        JSONObject newsJson = newsArray.getJSONObject(i);
-
-                        newsList.add(new SimpleNews(newsJson.getString("_id"),
-                                newsJson.getString("title"),
-                                newsJson.getString("time"),
-                                type,
-                                newsJson.getString("source")));
-                    }
-                }catch (JSONException e)
-                {
-                    Log.d("insertNewsList", e.toString());
+                if(this.type.equals("DetailedNews")) {
+                    JSONObject newsJson = new JSONObject(new JSONObject(rawData).getString("data"));
+                    return new Result(new DetailedNews(newsJson.getString("_id"),
+                            newsJson.getString("title"),
+                            newsJson.getString("time"),
+                            newsJson.getString("content"),
+                            newsJson.getString("source")));
                 }
-                return new Result(newsList);
-            }catch (Exception e){
+                else if(this.type.equals("CovidData"))
+                {
+                    return new Result(new JSONObject(rawData).getJSONObject(region));
+                }
+                else {
+                        List<SimpleNews> newsList = new ArrayList<>();
+                        try {
+                            Log.d("insertNewsList ", String.format(" type is %s ", type));
+                            JSONObject data = new JSONObject(rawData);
+                            JSONArray newsArray = data.getJSONArray("data");
+                            for (int i = 0; i < newsArray.length(); ++i) {
+                                JSONObject newsJson = newsArray.getJSONObject(i);
+                                if(this.type.equals("Search") && newsJson.getString("title").contains(keyword))
+                                    continue;
+                                newsList.add(new SimpleNews(newsJson.getString("_id"),
+                                        newsJson.getString("title"),
+                                        newsJson.getString("time"),
+                                        type,
+                                        newsJson.getString("source")));
+                            }
+                        } catch (JSONException e) {
+                            Log.d("insertNewsList", e.toString());
+                        }
+                        return new Result(newsList);
+                    }
+            }catch (SocketTimeoutException e)
+            {
+                return new Result("TIMEOUT");
+            }
+            catch (Exception e){
                 Log.d("READ", e.toString());
                 return new Result(e.toString());
             }
@@ -141,10 +180,18 @@ public class Manager {
 
         @Override
         protected void onPostExecute(Result result) {
-            if (result.data != null)
-                myCallBack.onSuccess(result.data);
-            else
-                myCallBack.onError(result.errorData);
+            if(this.type.equals("DetailedNews")) {
+                if (result.data != null)
+                    detailedNewsCallBack.onSuccess(result.detailedNewsData);
+                else
+                    detailedNewsCallBack.onError(result.errorData);
+            }
+            else{
+                if (result.data != null)
+                    simpleNewsCallBack.onSuccess(result.data);
+                else
+                    simpleNewsCallBack.onError(result.errorData);
+            }
         }
     }
 
@@ -165,29 +212,13 @@ public class Manager {
         }
     }
 
-    public void getSimpleNewsList(SimpleNewsCallBack simpleNewsCallBack, final String type, final int page, int size) {
-        new MyTask(simpleNewsCallBack, "https://covid-dashboard.aminer.cn/api/events/list"
-                + "?type=" + type + "&page=" + page + "&size=" + size, type, page).execute();
-        /*
+    public List<SimpleNews> getSimpleNewsListFromDatabase(String type, int page){
         dataBase = myDBOpenHelper.getReadableDatabase();
         List<SimpleNews> list = new ArrayList<>();
         Cursor cursor = dataBase.query("news", new String[]{"id", "title", "time", "type", "source"},
                 "type=? AND page=?", new String[]{type, String.valueOf(page)}, null, null, null);
         while(cursor.moveToNext())
         {
-            Log.d("getListSimpleNews ", String.format("(type, id, title, source) VALUES(%s, %s, %s, %s) type is %s and page is %s",
-                    cursor.getString(cursor.getColumnIndex("type")),
-                    cursor.getString(cursor.getColumnIndex("id")),
-                    cursor.getString(cursor.getColumnIndex("title")),
-                    cursor.getString(cursor.getColumnIndex("source")),
-                    type,
-                    String.valueOf(page)));
-
-
-            //System.out.println(cursor.getColumnCount());
-            //for(int j = 0; j < 5; ++j) System.out.println(cursor.getColumnName(j));
-            System.out.println(cursor.getColumnIndex("id") + " " + cursor.getColumnIndex("title") + " "
-                    + cursor.getColumnIndex("time") + " " + cursor.getColumnIndex("type") + " " + cursor.getColumnIndex("source"));
             list.add(new SimpleNews(cursor.getString(cursor.getColumnIndex("id")),
                     cursor.getString(cursor.getColumnIndex("title")),
                     cursor.getString(cursor.getColumnIndex("time")),
@@ -195,48 +226,42 @@ public class Manager {
                     cursor.getString(cursor.getColumnIndex("source"))));
         }
         cursor.close();
+        return list;
+    }
 
-         */
+    public void getSimpleNewsList(SimpleNewsCallBack simpleNewsCallBack, final String type, final int page, int size) {
+        new MyTask(simpleNewsCallBack, "https://covid-dashboard.aminer.cn/api/events/list"
+                + "?type=" + type + "&page=" + page + "&size=" + size, type, page).execute();
         return;
     }
 
-    /*
-
-    List<SimpleNews> searchSimpleNews(final String type, final String keyWord){
-        connectToInterface("https://covid-dashboard.aminer.cn/api/events/list"
-                + "?type=" + type + "&page=" + 1 + "&size=" + 100, new CallBack() {
-            @Override
-            public void timeout() {
-                Log.d("searchSimpleNews", "timeout");
-            }
-
-            @Override
-            public void error() {
-                Log.d("searchSimpleNews", "error");
-            }
-
-            @Override
-            public void onSuccess(String data) {
-                try {
-                    JSONObject rawData = new JSONObject(data);
-                    JSONArray newsArray = rawData.getJSONArray("data");
-                    List<SimpleNews> list = new ArrayList<>();
-                    for (int i = 0; i < newsArray.length(); ++i) {
-                        JSONObject newsData = newsArray.getJSONObject(i);
-                        if (newsData.getString("title").contains(keyWord))
-                            dataBase.insertSimpleNews(type, 1001, newsData);
-                    }
-                }catch (JSONException e){
-                    Log.d("searchSimpleNews ", e.toString());
-                }
-            }
-        });
-        return dataBase.getListSimpleNews(type, 1001);
+    public void getDetailedList(DetailedNewsCallBack detailedNewsCallBack, final String id)
+    {
+        new MyTask(detailedNewsCallBack, "https://covid-dashboard.aminer.cn/api/event/" + id);
     }
 
-    DetailedNews getDetailedNews(String id)
-    {
-        return dataBase.getDetailedNews(id);
+    public DetailedNews getDetailedListFromDatabase(String id){
+        dataBase = myDBOpenHelper.getReadableDatabase();
+        List<SimpleNews> list = new ArrayList<>();
+        Cursor cursor = dataBase.query("detailedNews", new String[]{"id", "title", "time", "content", "source"},
+                "id=?", new String[]{id}, null, null, null);
+        DetailedNews detailedNews = null;
+        while(cursor.moveToNext())
+        {
+            detailedNews = new DetailedNews(cursor.getString(cursor.getColumnIndex("id")),
+                    cursor.getString(cursor.getColumnIndex("title")),
+                    cursor.getString(cursor.getColumnIndex("time")),
+                    cursor.getString(cursor.getColumnIndex("content")),
+                    cursor.getString(cursor.getColumnIndex("source"))
+            );
+        }
+        cursor.close();
+        return detailedNews;
+    }
+
+    public void searchSimpleNews(SimpleNewsCallBack simpleNewsCallBack, final String type, final String keyWord){
+        new MyTask(simpleNewsCallBack,
+                "https://covid-dashboard.aminer.cn/api/events/list?type=all&page=1&size=500", keyWord).execute();
     }
 
     public void shareNews(Context context, String title, String content){
@@ -251,30 +276,9 @@ public class Manager {
         context.startActivity(Intent.createChooser(intent, "Share to:"));
     }
 
-    public String getBeginTimeAndPointValues(List<PointValue> confirmedPointValues, List<PointValue> curedPointValues, List<PointValue> deadPointValues, String region)
+    public void getBeginTimeAndPointValues(CovidDataCallBack covidDataCallBack, String region)
     {
-        if(hasInitCovidData == false)
-        {
-            hasInitCovidData = true;
-            connectToInterface("https://covid-dashboard.aminer.cn/api/dist/epidemic.json", new CallBack() {
-                @Override
-                public void timeout()  {
-                    Log.d("getSimpleNewsList", "timeout");
-                }
-
-                @Override
-                public void error() {
-                    Log.d("getSimpleNewsList", "error");
-                }
-
-                @Override
-                public void onSuccess(String data) {
-                    dataBase.initCovidData(data);
-                }
-            });
-        }
-        return dataBase.getBeginTimeAndPointValues(confirmedPointValues, curedPointValues, deadPointValues, region);
+        new MyTask(covidDataCallBack, "https://covid-dashboard.aminer.cn/api/dist/epidemic.json", region).execute();
     }
-     */
 }
 
