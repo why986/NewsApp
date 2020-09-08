@@ -79,9 +79,9 @@ public class Manager {
         Log.d("GetSimpleNewsList", url);
     }
 
-    public SimpleNews getNew(String s){
+    public SimpleNews getNew(String s,int page){
         SimpleNews n1 = new SimpleNews();
-        n1.title = s+"title";
+        n1.title = s+"title?page="+page;
         n1.date = s+"date";
         n1.source = s+"source";
         n1.content = s+"content";
@@ -96,9 +96,9 @@ public class Manager {
         for(int i=0;i<20;i++){
 
             if(count > 2){
-                res.add(getNew("REFRESH "+type + " "+Integer.toString(i) +"_"));
+                res.add(getNew("REFRESH "+type + " "+Integer.toString(i) +"_", page));
             }else{
-                res.add(getNew(type + " "+Integer.toString(i) +"_"));
+                res.add(getNew(type + " "+Integer.toString(i) +"_",page));
             }
         }
         return res;

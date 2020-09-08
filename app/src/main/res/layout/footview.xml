@@ -4,13 +4,11 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tips"
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/pb_progress"
+        style="?android:attr/progressBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="30dp"
-        android:textSize="15sp"
-        android:layout_marginBottom="1dp"/>
+        android:layout_gravity="center_horizontal" />
 
 </LinearLayout>

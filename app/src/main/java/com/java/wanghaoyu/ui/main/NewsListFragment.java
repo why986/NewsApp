@@ -30,6 +30,8 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
     String type;
     List<SimpleNews> news_list;
     Context mcontext;
+    Integer page_count = 1;
+    int SIZE = 20;
 
     public NewsListFragment(String type){
         this.type = type;
@@ -49,10 +51,21 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
         recyclerView.setLayoutManager(layoutManager);
 
         Manager manager = Manager.getInstance(view.getContext());
-        List<SimpleNews> news_list = manager.getSimpleNewsList(type, 1, 20);
+        List<SimpleNews> news_list = manager.getSimpleNewsList(type, page_count, SIZE);
 
         recycleViewAdapter = new NewsRecycleViewAdapter(news_list, mcontext);
         recyclerView.setAdapter(recycleViewAdapter);
+
+        recyclerView.addOnScrollListener(new onLoadMoreListener() {
+            @Override
+            protected void onLoading(int countItem,int lastItem) {
+                Manager manager = Manager.getInstance(mcontext);
+                page_count++;
+                List<SimpleNews> news_list = manager.getSimpleNewsList(type, page_count, SIZE);
+                ((NewsRecycleViewAdapter)recycleViewAdapter).addNews(news_list);
+                recycleViewAdapter.notifyDataSetChanged();
+            }
+        });
 
         swipeLayout.setColorSchemeResources(android.R.color.holo_blue_light,
                 android.R.color.holo_red_light);
@@ -64,7 +77,8 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Override
     public void onRefresh() {
         Manager manager = Manager.getInstance(mcontext);
-        List<SimpleNews> news_list = manager.getSimpleNewsList(type, 1, 20);
+        page_count = 1;
+        List<SimpleNews> news_list = manager.getSimpleNewsList(type, page_count, SIZE);
         ((NewsRecycleViewAdapter)recycleViewAdapter).changeToNews(news_list);
         recycleViewAdapter.notifyDataSetChanged();
         swipeLayout.setRefreshing(false);

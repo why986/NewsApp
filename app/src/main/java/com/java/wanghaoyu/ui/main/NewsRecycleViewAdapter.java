@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.java.wanghaoyu.R;
@@ -18,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NewsRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private final static int TYPE_CONTENT=0;//正常内容
+    private final static int TYPE_FOOTER=1;//下拉刷新
     List<SimpleNews> news; // 数据源
     Context context;    // 上下文Context
     ViewGroup parent;
@@ -35,6 +38,15 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     }
 
+    public static class FootViewHolder extends RecyclerView.ViewHolder {
+        private ContentLoadingProgressBar progressBar;
+        public FootViewHolder(View itemView) {
+            super(itemView);
+            progressBar=itemView.findViewById(R.id.pb_progress);
+        }
+
+    }
+
     // Provide a suitable constructor (depends on the kind of dataset)
     public NewsRecycleViewAdapter(List<SimpleNews> n, Context c) {
         news = n;
@@ -46,38 +58,60 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         news.addAll(n);
     }
 
+    public void addNews(List<SimpleNews> n){
+        news.addAll(n);
+    }
+
     // Create new views (invoked by the layout manager)
     @Override
-    public NewsRecycleViewAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
-                                                     int viewType) {
-        // create a new view
-        View v = (View) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.news_item, parent, false);
-        this.parent = parent;
-        MyViewHolder vh = new MyViewHolder(v);
-        return vh;
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                      int viewType) {
+        if (viewType==TYPE_FOOTER){
+            View v = (View) LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.footview, parent, false);
+            this.parent = parent;
+            return new FootViewHolder(v);
+        }
+        else {
+            View v = (View) LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.news_item, parent, false);
+            this.parent = parent;
+            MyViewHolder vh = new MyViewHolder(v);
+            return vh;
+        }
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
-        if (holder instanceof MyViewHolder) {
-            SimpleNews n = news.get(position);
-            View oneNewsView = ((MyViewHolder) holder).oneNewsView;
-            TextView t1 = (TextView) oneNewsView.findViewById(R.id.textView_news_title);
-            TextView t2 = (TextView) oneNewsView.findViewById(R.id.textView_news_source);
-            TextView t3 = (TextView) oneNewsView.findViewById(R.id.textView_news_date);
-            t1.setText(n.title);
-            t2.setText(n.source);
-            t3.setText(n.date);
+        if (getItemViewType(position)==TYPE_FOOTER){
+
+        }
+        else {
+            if (holder instanceof MyViewHolder) {
+                SimpleNews n = news.get(position);
+                View oneNewsView = ((MyViewHolder) holder).oneNewsView;
+                TextView t1 = (TextView) oneNewsView.findViewById(R.id.textView_news_title);
+                TextView t2 = (TextView) oneNewsView.findViewById(R.id.textView_news_source);
+                TextView t3 = (TextView) oneNewsView.findViewById(R.id.textView_news_date);
+                t1.setText(n.title);
+                t2.setText(n.source);
+                t3.setText(n.date);
+            }
         }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return news.size();
+        return news.size()+1;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position==news.size()){
+            return TYPE_FOOTER;
+        }
+        return TYPE_CONTENT;
     }
 }
