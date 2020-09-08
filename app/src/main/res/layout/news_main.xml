@@ -42,8 +42,11 @@
 
         <SearchView
             android:id="@+id/searchVIew"
+            style="@android:style/Widget.Material.Light.SearchView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#70F6F4F4"
+            android:backgroundTint="#FFFFFF"
             android:queryHint="今日热搜：肖战被曝为新冠病毒青春制作人" />
 
     </com.google.android.material.appbar.AppBarLayout>
