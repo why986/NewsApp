@@ -88,12 +88,18 @@ public class Manager {
         n1.type = s;
         return n1;
     }
-
+    private int count = 0;
     public List<SimpleNews> getSimpleNewsList(final String type, final int page, int size)
     {
+        if(type == "all") count ++;
         List<SimpleNews> res = new ArrayList<SimpleNews>();
         for(int i=0;i<20;i++){
-            res.add(getNew(type + " "+Integer.toString(i) +"_"));
+
+            if(count > 2){
+                res.add(getNew("REFRESH "+type + " "+Integer.toString(i) +"_"));
+            }else{
+                res.add(getNew(type + " "+Integer.toString(i) +"_"));
+            }
         }
         return res;
 //        connectToInterface("https://covid-dashboard.aminer.cn/api/events/list"

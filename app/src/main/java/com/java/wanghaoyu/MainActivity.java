@@ -3,25 +3,16 @@ package com.java.wanghaoyu;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Adapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
 
 
 import com.google.android.material.tabs.TabLayout;
-import com.java.wanghaoyu.ui.main.NewsItemAdapter;
 import com.java.wanghaoyu.ui.main.NewsListFragment;
 import com.java.wanghaoyu.ui.main.ViewPagerAdapter;
-
-import org.json.JSONException;
-
-import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
