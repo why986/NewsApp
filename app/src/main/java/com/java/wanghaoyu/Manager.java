@@ -87,7 +87,6 @@ public class Manager {
         @Override
         protected Result doInBackground(Void... voids) {
             try {
-                Log.d("doInBackground", "okk");
                 URL url = new URL(urlStr);
                 HttpsTrustManager.allowAllSSL();
                 HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
@@ -97,7 +96,6 @@ public class Manager {
                 connection.setConnectTimeout(10000);
                 connection.setRequestMethod("GET");
                 connection.setDoInput(true);
-                Log.d("doInBackground", "okk2");
 // 发起请求
                 connection.connect();
                 if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
@@ -110,11 +108,9 @@ public class Manager {
                 while ((line = reader.readLine()) != null) {
                     builder.append(line);
                 }
-                Log.d("doInBackground", "okk3");
 
                 reader.close();
                 connection.disconnect();
-                Log.d("doInBackground", "okk4");
                 Log.d("READ", builder.toString());
                 String rawData = builder.toString();
 
@@ -123,7 +119,6 @@ public class Manager {
                     Log.d("insertNewsList ", String.format(" type is %s ", type));
                     JSONObject data = new JSONObject(rawData);
                     JSONArray newsArray = data.getJSONArray("data");
-                    Log.d("insertNewsList", data.toString());
                     for (int i = 0; i < newsArray.length(); ++i) {
                         JSONObject newsJson = newsArray.getJSONObject(i);
 
@@ -132,13 +127,11 @@ public class Manager {
                                 newsJson.getString("time"),
                                 type,
                                 newsJson.getString("source")));
-                        Log.d("READ", String.valueOf(i));
                     }
                 }catch (JSONException e)
                 {
                     Log.d("insertNewsList", e.toString());
                 }
-                Log.d("READ", "size is " + String.valueOf(newsList.size()));
                 return new Result(newsList);
             }catch (Exception e){
                 Log.d("READ", e.toString());
@@ -168,7 +161,7 @@ public class Manager {
             contentValues.put("type", DatabaseUtils.sqlEscapeString(type));
             contentValues.put("source", DatabaseUtils.sqlEscapeString(simpleNews.source));
             contentValues.put("page", page);
-            dataBase.insert("news", null, contentValues);
+            dataBase.replace("news", null, contentValues);
         }
     }
 

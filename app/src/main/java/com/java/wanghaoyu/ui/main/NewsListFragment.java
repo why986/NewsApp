@@ -31,7 +31,8 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
     String type;
     View view;
     Context mcontext;
-    Integer page_count, SIZE;
+    int page_count=1;
+    final int SIZE=15;
     Manager manager;
     public NewsListFragment(String type){
         this.type = type;
@@ -82,15 +83,15 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
                             @Override
                             public void onSuccess(List<SimpleNews> data) {
                                 news_list = data;
+                                //List<SimpleNews> news_list = manager.getSimpleNewsList(type, page_count, SIZE);
+                                ((NewsRecycleViewAdapter)recycleViewAdapter).addNews(news_list);
+                                recycleViewAdapter.notifyDataSetChanged();
                             }
                         }, type, page_count, SIZE);
-                        //List<SimpleNews> news_list = manager.getSimpleNewsList(type, page_count, SIZE);
-                        ((NewsRecycleViewAdapter)recycleViewAdapter).addNews(news_list);
-                        recycleViewAdapter.notifyDataSetChanged();
                     }
                 });
             }
-        }, type, 1, 15);
+        }, type, page_count, SIZE);
         //List<SimpleNews> news_list = manager.getSimpleNewsList(type, page_count, SIZE);
 
         //Log.d("onCreateView", String.valueOf(news_list.size()));
@@ -104,7 +105,8 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Override
     public void onRefresh() {
         Manager manager = Manager.getInstance(mcontext);
-        page_count = 1;manager.getSimpleNewsList(new Manager.SimpleNewsCallBack() {
+        page_count = 1;
+        manager.getSimpleNewsList(new Manager.SimpleNewsCallBack() {
             @Override
             public void onError(String data) {
                 Log.d("manager.getSimpleNewsList", data);
