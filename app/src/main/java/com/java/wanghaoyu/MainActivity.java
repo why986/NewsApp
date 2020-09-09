@@ -1,5 +1,6 @@
 package com.java.wanghaoyu;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -90,6 +91,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_item_minus:
                 Toast.makeText(MainActivity.this, "种类--", Toast.LENGTH_LONG).show();
                 adapter.delFragment();
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, LineChartActivity.class);
+                startActivity(intent);
 
                 break;
             case R.id.menu_item_add_paper:

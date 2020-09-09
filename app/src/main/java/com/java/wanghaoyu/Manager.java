@@ -188,6 +188,12 @@ public class Manager {
                 else
                     detailedNewsCallBack.onError(result.errorData);
             }
+            else if(this.type.equals("CovidData")){
+                if (result.covidData != null)
+                    covidDataCallBack.onSuccess(result.covidData);
+                else
+                    covidDataCallBack.onError(result.errorData);
+            }
             else{
                 if (result.data != null)
                     simpleNewsCallBack.onSuccess(result.data);
@@ -298,7 +304,7 @@ public class Manager {
         context.startActivity(Intent.createChooser(intent, "Share to:"));
     }
 
-    public void getBeginTimeAndPointValues(CovidDataCallBack covidDataCallBack, String region)
+    public void getCovidValues(CovidDataCallBack covidDataCallBack, String region)
     {
         new MyTask(covidDataCallBack, "https://covid-dashboard.aminer.cn/api/dist/epidemic.json", region).execute();
     }

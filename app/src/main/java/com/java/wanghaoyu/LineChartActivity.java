@@ -4,7 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +22,7 @@ import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.model.ValueShape;
+import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
 
 public class LineChartActivity extends AppCompatActivity {
@@ -26,6 +32,7 @@ public class LineChartActivity extends AppCompatActivity {
     private List<PointValue> curedPointValues = new ArrayList<>();
     private List<PointValue> deadPointValues = new ArrayList<>();
     private List<AxisValue> axisValues = new ArrayList<>();
+    private String beginTime;
 
     private static Manager manager;
 
@@ -36,7 +43,33 @@ public class LineChartActivity extends AppCompatActivity {
 
         lineChartView = (LineChartView) findViewById(R.id.line_chart);
         manager = Manager.getInstance(this);
-        //String begin_time = manager.getBeginTimeAndPointValues(confirmedPointValues, curedPointValues, deadPointValues, "[CHINA]");
+        manager.getCovidValues(new Manager.CovidDataCallBack() {
+            @Override
+            public void onError(String data) {
+                Log.d("getCovidValues", data);
+            }
+
+            @Override
+            public void onSuccess(JSONObject data) {
+                getPointValues(data);
+                Log.d("manager.getCovidValues", confirmedPointValues.size() + " " + curedPointValues.size());
+                initLineChart();
+            }
+        }, "China");
+    }
+    private void getPointValues(JSONObject data){
+        try {
+            beginTime = data.getString("begin");
+            JSONArray jsonArray = data.getJSONArray("data");
+            for(int i = 0; i < jsonArray.length(); ++i){
+                JSONArray covidData = jsonArray.getJSONArray(i);
+                confirmedPointValues.add(new PointValue(i, covidData.getInt(0)));
+                curedPointValues.add(new PointValue(i, covidData.getInt(2)));
+                deadPointValues.add(new PointValue(i, covidData.getInt(3)));
+            }
+        }catch (JSONException e){
+            Log.d("getPointValues", e.toString());
+        }
     }
 
     private void initLineChart()
@@ -80,6 +113,8 @@ public class LineChartActivity extends AppCompatActivity {
         lineChartView.setContainerScrollEnabled(true, ContainerScrollType.HORIZONTAL);
         lineChartView.setLineChartData(lineChartData);
         lineChartView.setVisibility(View.VISIBLE);
+
+        Viewport v = new Viewport(lineChartView.getMaximumViewport());
 
     }
 }
