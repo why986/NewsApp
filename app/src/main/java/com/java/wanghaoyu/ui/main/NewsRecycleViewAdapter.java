@@ -112,11 +112,15 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     ((MyViewHolder) holder).oneNewsView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            mOnItemClickListener.onItemClick(view, position);
-                            t1.setTextColor(0xFF888888);
-                            SimpleNews n = news.get(position);
-                            n.hasRead = true;
-                            news.set(position, n);
+                            if(position >= 0 && position < news.size()) {
+                                mOnItemClickListener.onItemClick(view, position);
+
+                                // 设置阅读变色
+                                t1.setTextColor(0xFF888888);
+                                SimpleNews n = news.get(position);
+                                n.hasRead = true;
+                                news.set(position, n);
+                            }
                         }
                     });
                 }

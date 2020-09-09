@@ -112,9 +112,11 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
             @Override
             public void onItemClick(View view, int position) {
 //                Toast.makeText(mcontext, "这是条目" + news_list.get(position).title, Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(mcontext, NewsCotentActivity.class);
-                intent.putExtra("ID", news_list.get(position).id);
-                startActivity(intent);
+                if(position >= 0 && position < news_list.size()) {
+                    Intent intent = new Intent(mcontext, NewsCotentActivity.class);
+                    intent.putExtra("ID", news_list.get(position).id);
+                    startActivity(intent);
+                }
             }
         });
         return view;
