@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-public class NewsCotentActivity extends AppCompatActivity {
+public class NewsContentActivity extends AppCompatActivity {
     TextView view_title;
     TextView view_content;
 
@@ -34,6 +34,7 @@ public class NewsCotentActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(DetailedNews detailedNews) {
+                manager.insertDetailedNews(detailedNews);
                 view_title = (TextView) findViewById(R.id.textView_Title);
                 view_content = (TextView) findViewById(R.id.textView_Content);
                 view_title.setText(detailedNews.title);
