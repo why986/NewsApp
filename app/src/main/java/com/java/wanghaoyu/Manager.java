@@ -157,7 +157,7 @@ public class Manager {
                             JSONArray newsArray = data.getJSONArray("data");
                             for (int i = 0; i < newsArray.length(); ++i) {
                                 JSONObject newsJson = newsArray.getJSONObject(i);
-                                if(this.type.equals("Search") && newsJson.getString("title").contains(keyword))
+                                if(this.type.equals("Search") && !newsJson.getString("title").contains(keyword))
                                     continue;
                                 newsList.add(new SimpleNews(newsJson.getString("_id"),
                                         newsJson.getString("title"),
