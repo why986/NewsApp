@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewpager;
     private TabLayout tabLayout;
     DatabaseHelper databaseHelper = null;
+    private Button b1, b2, b3, b4;
 
 
     @Override
@@ -40,6 +42,10 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewpager);
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        b1 = (Button) findViewById(R.id.button1);
+        b2 = (Button) findViewById(R.id.button2);
+        b3 = (Button) findViewById(R.id.button3);
+        b4 = (Button) findViewById(R.id.button4);
 
         initMain();
     }
@@ -79,17 +85,33 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void onClick(View view){
+        switch (view.getId()) {
+            case R.id.button1:
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, LineChartActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.button2:
+                break;
+
+            case R.id.button3:
+                break;
+
+            case R.id.button4:
+                break;
+        }
+
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         String type;
         switch (item.getItemId()) {
             case R.id.menu_item_minus:
-                //Toast.makeText(MainActivity.this, "种类--", Toast.LENGTH_LONG).show();
-                //adapter.delFragment();
-                Intent intent = new Intent();
-                intent.setClass(MainActivity.this, LineChartActivity.class);
-                startActivity(intent);
-
+                Toast.makeText(MainActivity.this, "种类--", Toast.LENGTH_LONG).show();
+                adapter.delFragment();
                 break;
             case R.id.menu_item_add_paper:
                 Toast.makeText(MainActivity.this, "种类++", Toast.LENGTH_LONG).show();
