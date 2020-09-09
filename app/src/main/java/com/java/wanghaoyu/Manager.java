@@ -161,7 +161,8 @@ public class Manager {
                                         newsJson.getString("title"),
                                         newsJson.getString("time"),
                                         type,
-                                        newsJson.getString("source")));
+                                        newsJson.getString("source"),
+                                        "FALSE"));
                             }
                         } catch (JSONException e) {
                             Log.d("insertNewsList", e.toString());
@@ -208,14 +209,33 @@ public class Manager {
             contentValues.put("type", DatabaseUtils.sqlEscapeString(type));
             contentValues.put("source", DatabaseUtils.sqlEscapeString(simpleNews.source));
             contentValues.put("page", page);
-            dataBase.replace("news", null, contentValues);
+            if(simpleNews.hasRead == true) contentValues.put("hasRead", "TRUE");
+            else contentValues.put("hasRead", "FALSE");
+            dataBase.replace("simpleNews", null, contentValues);
+        }
+    }
+
+    public void setSimpleNewsRead(String id){
+        dataBase = myDBOpenHelper.getWritableDatabase();
+        Cursor cursor = dataBase.query("simpleNews", new String[]{"id", "title", "time", "type", "source", "page", "hasRead"},
+                "id=?", new String[]{id}, null, null, null);
+        while (cursor.moveToNext()){
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("id", cursor.getString(cursor.getColumnIndex("id")));
+            contentValues.put("title", cursor.getString(cursor.getColumnIndex("title")));
+            contentValues.put("time", cursor.getString(cursor.getColumnIndex("time")));
+            contentValues.put("type", cursor.getString(cursor.getColumnIndex("type")));
+            contentValues.put("source", cursor.getString(cursor.getColumnIndex("source")));
+            contentValues.put("page", cursor.getString(cursor.getColumnIndex("page")));
+            contentValues.put("hasRead", "TRUE");
+            dataBase.replace("simpleNews", null, contentValues);
         }
     }
 
     public List<SimpleNews> getSimpleNewsListFromDatabase(String type, int page){
         dataBase = myDBOpenHelper.getReadableDatabase();
         List<SimpleNews> list = new ArrayList<>();
-        Cursor cursor = dataBase.query("news", new String[]{"id", "title", "time", "type", "source"},
+        Cursor cursor = dataBase.query("simpleNews", new String[]{"id", "title", "time", "type", "source", "hasRead"},
                 "type=? AND page=?", new String[]{type, String.valueOf(page)}, null, null, null);
         while(cursor.moveToNext())
         {
@@ -223,7 +243,8 @@ public class Manager {
                     cursor.getString(cursor.getColumnIndex("title")),
                     cursor.getString(cursor.getColumnIndex("time")),
                     cursor.getString(cursor.getColumnIndex("type")),
-                    cursor.getString(cursor.getColumnIndex("source"))));
+                    cursor.getString(cursor.getColumnIndex("source")),
+                    cursor.getString((cursor.getColumnIndex("hasRead")))));
         }
         cursor.close();
         return list;
@@ -235,12 +256,12 @@ public class Manager {
         return;
     }
 
-    public void getDetailedList(DetailedNewsCallBack detailedNewsCallBack, final String id)
+    public void getDetailedNews(DetailedNewsCallBack detailedNewsCallBack, final String id)
     {
         new MyTask(detailedNewsCallBack, "https://covid-dashboard.aminer.cn/api/event/" + id);
     }
 
-    public DetailedNews getDetailedListFromDatabase(String id){
+    public DetailedNews getDetailedNewsFromDatabase(String id){
         dataBase = myDBOpenHelper.getReadableDatabase();
         List<SimpleNews> list = new ArrayList<>();
         Cursor cursor = dataBase.query("detailedNews", new String[]{"id", "title", "time", "content", "source"},

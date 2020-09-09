@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.java.wanghaoyu.Manager;
 import com.java.wanghaoyu.R;
 import com.java.wanghaoyu.SimpleNews;
 
@@ -117,9 +118,8 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
                                 // 设置阅读变色
                                 t1.setTextColor(0xFF888888);
-                                SimpleNews n = news.get(position);
-                                n.hasRead = true;
-                                news.set(position, n);
+                                Manager manager = Manager.getInstance(context);
+                                manager.setSimpleNewsRead(news.get(position).id);
                             }
                         }
                     });

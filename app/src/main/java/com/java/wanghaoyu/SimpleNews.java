@@ -16,9 +16,12 @@ public class SimpleNews {
 
     }
 
-    public SimpleNews(String id, String title, String time, String type, String source)
+    public SimpleNews(String id, String title, String time, String type, String source, String hasRead)
     {
         this.id = id; this.title = title; this.time = time; this.type = type; this.source = source;
+        if(hasRead.equals("TRUE"))
+            this.hasRead = true;
+        else this.hasRead = false;
     }
 
     public SimpleNews(JSONObject data) throws JSONException{
