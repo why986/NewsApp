@@ -103,7 +103,7 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
         //Log.d("onCreateView", String.valueOf(news_list.size()));
 
 
-
+        
         return view;
 
     }
