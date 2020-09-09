@@ -1,29 +1,84 @@
 package com.java.wanghaoyu;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.java.wanghaoyu.ui.main.NewsRecycleViewAdapter;
+import com.java.wanghaoyu.ui.main.onLoadMoreListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SearchableActivity extends AppCompatActivity {
 
-    TextView mTvWord = null;
+    RecyclerView recyclerView;
+    List<SimpleNews> news_list;
+    NewsRecycleViewAdapter recycleViewAdapter;
+    RecyclerView.LayoutManager layoutManager;
+    Context mcontext;
+    int page_count=1;
+    final int SIZE=15;
+    String type = "all";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_searchable);
-        mTvWord = (TextView) findViewById(R.id.tv_word);
+        mcontext = this;
+        recyclerView = (RecyclerView) findViewById(R.id.searchRecycleView);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recycleViewAdapter = new NewsRecycleViewAdapter(this);
+        recyclerView.setAdapter(recycleViewAdapter);
         Intent intent = getIntent();
+
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            mTvWord.append(intent.getStringExtra(SearchManager.QUERY));
-        } else if (Intent.ACTION_VIEW.equals((intent.getAction()))){
-            mTvWord.append(intent.getDataString());
-        } else {
-            mTvWord.setText("R.string.word_not_found");
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Toast.makeText(this, "搜索："+query, Toast.LENGTH_LONG).show();
+            // Search with query, return in newsList;
+            //Test
+            final Manager manager = Manager.getInstance(this);
+
+            manager.searchSimpleNews(new Manager.SimpleNewsCallBack() {
+                @Override
+                public void onError(String data) {
+                    Log.d("manager.getSimpleNewsList", data);
+                }
+
+                @Override
+                public void onSuccess(List<SimpleNews> data) {
+                    news_list = data;
+                    // manager.insertSimpleNewsList(type, page_count, news_list);
+                    recycleViewAdapter.changeToNews(news_list);
+                    recycleViewAdapter.notifyDataSetChanged();
+                }
+            }, type, query);
+
+            // End Search
+
+
         }
-        System.out.println();
+        recycleViewAdapter.notifyDataSetChanged();
+        recycleViewAdapter.setOnItemClickListener(new NewsRecycleViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                recycleViewAdapter.notifyDataSetChanged();
+                if(position >= 0 && position < news_list.size()) {
+                    Intent intent = new Intent(mcontext, NewsContentActivity.class);
+                    intent.putExtra("ID", news_list.get(position).id);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 }
