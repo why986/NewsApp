@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-public class NewsCotentActivity extends AppCompatActivity {
+public class NewsContentActivity extends AppCompatActivity {
     TextView view_title;
     TextView view_content;
 
@@ -13,7 +13,6 @@ public class NewsCotentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_cotent);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Bundle bundle = getIntent().getExtras();
         assert bundle != null;
         final String id = bundle.getString("ID");

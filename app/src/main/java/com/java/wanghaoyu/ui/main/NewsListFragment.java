@@ -7,11 +7,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.java.wanghaoyu.Manager;
-import com.java.wanghaoyu.NewsCotentActivity;
+import com.java.wanghaoyu.NewsContentActivity;
 import com.java.wanghaoyu.R;
 import com.java.wanghaoyu.SimpleNews;
 
@@ -20,10 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import org.json.JSONException;
-
 import java.util.List;
-import java.util.Objects;
 
 
 public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -113,7 +108,7 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
             public void onItemClick(View view, int position) {
 //                Toast.makeText(mcontext, "这是条目" + news_list.get(position).title, Toast.LENGTH_LONG).show();
                 if(position >= 0 && position < news_list.size()) {
-                    Intent intent = new Intent(mcontext, NewsCotentActivity.class);
+                    Intent intent = new Intent(mcontext, NewsContentActivity.class);
                     intent.putExtra("ID", news_list.get(position).id);
                     startActivity(intent);
                 }
