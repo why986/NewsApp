@@ -29,6 +29,7 @@ public class SearchableActivity extends AppCompatActivity {
     int page_count=1;
     final int SIZE=15;
     String type = "all";
+    DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,16 +59,19 @@ public class SearchableActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(List<SimpleNews> data) {
                     news_list = data;
-                    // manager.insertSimpleNewsList(type, page_count, news_list);
                     recycleViewAdapter.changeToNews(news_list);
                     recycleViewAdapter.notifyDataSetChanged();
                 }
             }, type, query);
 
             // End Search
-
-
+            databaseHelper = DatabaseHelper.getHelper(this);
+            Word word0 = new Word(query);
+            databaseHelper.insertWord(word0);
         }
+
+
+
         recycleViewAdapter.notifyDataSetChanged();
         recycleViewAdapter.setOnItemClickListener(new NewsRecycleViewAdapter.OnItemClickListener() {
             @Override
@@ -80,5 +84,6 @@ public class SearchableActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 }
