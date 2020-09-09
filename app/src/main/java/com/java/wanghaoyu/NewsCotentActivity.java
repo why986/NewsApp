@@ -3,6 +3,7 @@ package com.java.wanghaoyu;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 public class NewsCotentActivity extends AppCompatActivity {
@@ -18,6 +19,7 @@ public class NewsCotentActivity extends AppCompatActivity {
         assert bundle != null;
         final String id = bundle.getString("ID");
         final Manager manager = Manager.getInstance(this);
+        Log.d("NewsContentActivity", "ok");
         manager.getDetailedNews(new Manager.DetailedNewsCallBack() {
             @Override
             public void onError(String data) {
