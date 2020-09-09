@@ -55,10 +55,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
     private void initToolBar(){
         setSupportActionBar(mtbar);
 
@@ -85,8 +81,11 @@ public class MainActivity extends AppCompatActivity {
         String type;
         switch (item.getItemId()) {
             case R.id.menu_item_minus:
-                Toast.makeText(MainActivity.this, "种类--", Toast.LENGTH_LONG).show();
-                adapter.delFragment();
+                //Toast.makeText(MainActivity.this, "种类--", Toast.LENGTH_LONG).show();
+                //adapter.delFragment();
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, LineChartActivity.class);
+                startActivity(intent);
 
                 break;
             case R.id.menu_item_add_paper:

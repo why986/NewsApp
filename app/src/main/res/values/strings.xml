@@ -5,4 +5,8 @@
     <string name="tab_event">Event</string>
     <string name="menu_add">增加种类</string>
     <string name="menu_minus">减少种类</string>
+    <string name="line_chart_title1">确诊和治愈病例数据</string>
+    <string name="line_chart_title2">死亡病例数据</string>
+    <string name="regionText">地区：</string>
+    <string name="regionButton">确认</string>
 </resources>

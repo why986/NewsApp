@@ -19,6 +19,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -137,6 +138,7 @@ public class Manager {
 
                 if(this.type.equals("DetailedNews")) {
                     JSONObject newsJson = new JSONObject(new JSONObject(rawData).getString("data"));
+
                     return new Result(new DetailedNews(newsJson.getString("_id"),
                             newsJson.getString("title"),
                             newsJson.getString("time"),
@@ -145,7 +147,7 @@ public class Manager {
                 }
                 else if(this.type.equals("CovidData"))
                 {
-                    return new Result(new JSONObject(rawData).getJSONObject(region));
+                    return new Result(new JSONObject(rawData));//.getJSONObject(region));
                 }
                 else {
                         List<SimpleNews> newsList = new ArrayList<>();
@@ -174,6 +176,11 @@ public class Manager {
                 Log.d("READ", "TIMEOUT");
                 return new Result("TIMEOUT");
             }
+            catch (UnknownHostException e)
+            {
+                Log.d("READ", "TIMEOUT");
+                return new Result("TIMEOUT");
+            }
             catch (Exception e){
                 Log.d("READ", e.toString());
                 return new Result(e.toString());
@@ -187,6 +194,12 @@ public class Manager {
                     detailedNewsCallBack.onSuccess(result.detailedNewsData);
                 else
                     detailedNewsCallBack.onError(result.errorData);
+            }
+            else if(this.type.equals("CovidData")){
+                if (result.covidData != null)
+                    covidDataCallBack.onSuccess(result.covidData);
+                else
+                    covidDataCallBack.onError(result.errorData);
             }
             else{
                 if (result.data != null)
@@ -206,7 +219,7 @@ public class Manager {
             ContentValues contentValues = new ContentValues();
             contentValues.put("id", DatabaseUtils.sqlEscapeString(simpleNews.id));
             contentValues.put("title", DatabaseUtils.sqlEscapeString(simpleNews.title));
-            contentValues.put("time", DatabaseUtils.sqlEscapeString(simpleNews.title));
+            contentValues.put("time", DatabaseUtils.sqlEscapeString(simpleNews.time));
             contentValues.put("type", DatabaseUtils.sqlEscapeString(type));
             contentValues.put("source", DatabaseUtils.sqlEscapeString(simpleNews.source));
             contentValues.put("page", page);
@@ -233,11 +246,12 @@ public class Manager {
         }
     }
 
+
     public List<SimpleNews> getSimpleNewsListFromDatabase(String type, int page){
         dataBase = myDBOpenHelper.getReadableDatabase();
         List<SimpleNews> list = new ArrayList<>();
         Cursor cursor = dataBase.query("simpleNews", new String[]{"id", "title", "time", "type", "source", "hasRead"},
-                "type=? AND page=?", new String[]{type, String.valueOf(page)}, null, null, null);
+                "type=? AND page=?", new String[]{"'" + type + "'", String.valueOf(page)}, null, null, null);
         while(cursor.moveToNext())
         {
             list.add(new SimpleNews(cursor.getString(cursor.getColumnIndex("id")),
@@ -257,16 +271,31 @@ public class Manager {
         return;
     }
 
+    public void insertDetailedNews(DetailedNews detailedNews){
+        dataBase = myDBOpenHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("id", DatabaseUtils.sqlEscapeString(detailedNews.id));
+        contentValues.put("title", DatabaseUtils.sqlEscapeString(detailedNews.title));
+        contentValues.put("time", DatabaseUtils.sqlEscapeString(detailedNews.time));
+        contentValues.put("content", DatabaseUtils.sqlEscapeString(detailedNews.content));
+        contentValues.put("source", DatabaseUtils.sqlEscapeString(detailedNews.source));
+        dataBase.replace("detailedNews", null, contentValues);
+    }
+
     public void getDetailedNews(DetailedNewsCallBack detailedNewsCallBack, final String id)
     {
         new MyTask(detailedNewsCallBack, "https://covid-dashboard.aminer.cn/api/event/" + id).execute();
     }
 
     public DetailedNews getDetailedNewsFromDatabase(String id){
+
+        Log.d("getDetailedNewsFromDatabase", id);
         dataBase = myDBOpenHelper.getReadableDatabase();
         List<SimpleNews> list = new ArrayList<>();
         Cursor cursor = dataBase.query("detailedNews", new String[]{"id", "title", "time", "content", "source"},
-                "id=?", new String[]{id}, null, null, null);
+                //null, null,
+                "id=?", new String[]{"'" + id + "'"},
+                null, null, null);
         DetailedNews detailedNews = null;
         while(cursor.moveToNext())
         {
@@ -298,7 +327,7 @@ public class Manager {
         context.startActivity(Intent.createChooser(intent, "Share to:"));
     }
 
-    public void getBeginTimeAndPointValues(CovidDataCallBack covidDataCallBack, String region)
+    public void getCovidValues(CovidDataCallBack covidDataCallBack, String region)
     {
         new MyTask(covidDataCallBack, "https://covid-dashboard.aminer.cn/api/dist/epidemic.json", region).execute();
     }

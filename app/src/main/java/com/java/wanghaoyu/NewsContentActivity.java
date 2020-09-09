@@ -35,6 +35,7 @@ public class NewsContentActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(DetailedNews detailedNews) {
+                manager.insertDetailedNews(detailedNews);
                 view_title = (TextView) findViewById(R.id.textView_Title);
                 view_content = (TextView) findViewById(R.id.textView_Content);
                 view_title.setText(detailedNews.title);
