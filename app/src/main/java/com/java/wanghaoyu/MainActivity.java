@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPagerAdapter adapter;
     private ViewPager viewpager;
     private TabLayout tabLayout;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewpager);
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        searchView = (SearchView) findViewById(R.id.searchVIew);
 
         initMain();
     }
@@ -71,15 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initToolBar(){
         setSupportActionBar(mtbar);
-//        //设置NavigationIcon的点击事件,需要放在setSupportActionBar之后设置才会生效,
-//        //因为setSupportActionBar里面也会setNavigationOnClickListener
-//        mtbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View pView) {
-//                // TODO: 2017/5/5 添加抽屉
-//
-//            }
-//        });
+
     }
 
     @Override

@@ -9,6 +9,7 @@ public class SimpleNews {
     public String time;
     public String type;
     public String source;
+    public boolean hasRead = false;
 
     public SimpleNews()
     {

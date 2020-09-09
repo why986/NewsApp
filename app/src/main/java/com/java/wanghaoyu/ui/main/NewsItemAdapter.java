@@ -58,6 +58,9 @@ public class NewsItemAdapter extends BaseAdapter {
 //        t1.setText("TITLE");
 //        t2.setText("SOURCE");
 //        t3.setText("DATE");
+        if(news.hasRead){
+            t1.setTextColor(0xFF888888);
+        }
         return oneNewsView;
     }
 }
