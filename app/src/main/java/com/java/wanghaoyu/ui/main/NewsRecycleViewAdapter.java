@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.core.widget.ContentLoadingProgressBar;
@@ -18,12 +19,15 @@ import com.java.wanghaoyu.SimpleNews;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewsRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class NewsRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+        {
     private final static int TYPE_CONTENT=0;//正常内容
     private final static int TYPE_FOOTER=1;//下拉刷新
     List<SimpleNews> news; // 数据源
     Context context;    // 上下文Context
     ViewGroup parent;
+    RecyclerView recyclerView;
+
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -52,6 +56,12 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         news = n;
         context = c;
     }
+
+    public NewsRecycleViewAdapter(Context c) {
+        news = new ArrayList<SimpleNews>();
+        context = c;
+    }
+
 
     public void changeToNews(List<SimpleNews> n){
         news.clear();
@@ -83,23 +93,42 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if (getItemViewType(position)==TYPE_FOOTER){
 
         }
         else {
             if (holder instanceof MyViewHolder) {
-                SimpleNews n = news.get(position);
+                final SimpleNews n = news.get(position);
                 View oneNewsView = ((MyViewHolder) holder).oneNewsView;
-                TextView t1 = (TextView) oneNewsView.findViewById(R.id.textView_news_title);
+                final TextView t1 = (TextView) oneNewsView.findViewById(R.id.textView_news_title);
                 TextView t2 = (TextView) oneNewsView.findViewById(R.id.textView_news_source);
                 TextView t3 = (TextView) oneNewsView.findViewById(R.id.textView_news_date);
                 t1.setText(n.title);
                 t2.setText(n.source);
                 t3.setText(n.time);
+                // item click
+                if (mOnItemClickListener != null) {
+                    ((MyViewHolder) holder).oneNewsView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            mOnItemClickListener.onItemClick(view, position);
+                            t1.setTextColor(0xFF888888);
+                            SimpleNews n = news.get(position);
+                            n.hasRead = true;
+                            news.set(position, n);
+                        }
+                    });
+                }
             }
         }
+
+
     }
+
+
+
+
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
@@ -114,4 +143,18 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
         return TYPE_CONTENT;
     }
+
+
+
+    private OnItemClickListener mOnItemClickListener;
+
+    public interface OnItemClickListener{
+        void onItemClick(View view, int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener mOnItemClickListener){
+        this.mOnItemClickListener = mOnItemClickListener;
+    }
+
+
 }

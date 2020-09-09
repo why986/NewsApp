@@ -1,14 +1,17 @@
 package com.java.wanghaoyu.ui.main;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.java.wanghaoyu.Manager;
+import com.java.wanghaoyu.NewsCotentActivity;
 import com.java.wanghaoyu.R;
 import com.java.wanghaoyu.SimpleNews;
 
@@ -26,7 +29,7 @@ import java.util.Objects;
 public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     SwipeRefreshLayout swipeLayout;
     RecyclerView recyclerView;
-    RecyclerView.Adapter recycleViewAdapter;
+    NewsRecycleViewAdapter recycleViewAdapter;
     RecyclerView.LayoutManager layoutManager;
     String type;
     View view;
@@ -34,15 +37,17 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
     int page_count=1;
     final int SIZE=15;
     Manager manager;
+    List<SimpleNews> news_list;
+
+
     public NewsListFragment(String type){
         this.type = type;
     }
-    List<SimpleNews> news_list;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-/*
- */
+
 
         view =  inflater.inflate(R.layout.new_list_fragment, container, false);
         mcontext = view.getContext();
@@ -54,6 +59,10 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
         // use a linear layout manager
         layoutManager = new LinearLayoutManager(mcontext);
         recyclerView.setLayoutManager(layoutManager);
+        recycleViewAdapter = new NewsRecycleViewAdapter(mcontext);
+        recyclerView.setAdapter(recycleViewAdapter);
+
+
 
         manager = Manager.getInstance(view.getContext());
 
@@ -64,8 +73,8 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
                 if(data.equals("TIMEOUT"))
                 {
                     news_list = manager.getSimpleNewsListFromDatabase(type, page_count);
-                    recycleViewAdapter = new NewsRecycleViewAdapter(news_list, mcontext);
-                    recyclerView.setAdapter(recycleViewAdapter);
+                    recycleViewAdapter.changeToNews(news_list);
+                    recycleViewAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -73,8 +82,8 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
             public void onSuccess(List<SimpleNews> data) {
                 news_list = data;
                 manager.insertSimpleNewsList(type, page_count, news_list);
-                recycleViewAdapter = new NewsRecycleViewAdapter(news_list, mcontext);
-                recyclerView.setAdapter(recycleViewAdapter);
+                recycleViewAdapter.changeToNews(news_list);
+                recycleViewAdapter.notifyDataSetChanged();
                 recyclerView.addOnScrollListener(new onLoadMoreListener() {
                     @Override
                     protected void onLoading(int countItem,int lastItem) {
@@ -98,14 +107,17 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
                 });
             }
         }, type, page_count, SIZE);
-        //List<SimpleNews> news_list = manager.getSimpleNewsList(type, page_count, SIZE);
 
-        //Log.d("onCreateView", String.valueOf(news_list.size()));
-
-
-
+        recycleViewAdapter.setOnItemClickListener(new NewsRecycleViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+//                Toast.makeText(mcontext, "这是条目" + news_list.get(position).title, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(mcontext, NewsCotentActivity.class);
+                intent.putExtra("ID", news_list.get(position).id);
+                startActivity(intent);
+            }
+        });
         return view;
-
     }
 
     @Override
