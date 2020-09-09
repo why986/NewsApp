@@ -7,7 +7,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.java.wanghaoyu.MainActivity;
 import com.java.wanghaoyu.Manager;
 import com.java.wanghaoyu.NewsContentActivity;
 import com.java.wanghaoyu.R;
@@ -92,9 +94,9 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
 
                             @Override
                             public void onSuccess(List<SimpleNews> data) {
-                                news_list = data;
+                                news_list.addAll(data);
                                 //List<SimpleNews> news_list = manager.getSimpleNewsList(type, page_count, SIZE);
-                                ((NewsRecycleViewAdapter)recycleViewAdapter).addNews(news_list);
+                                ((NewsRecycleViewAdapter)recycleViewAdapter).changeToNews(news_list);
                                 recycleViewAdapter.notifyDataSetChanged();
                             }
                         }, type, page_count, SIZE);
@@ -107,11 +109,12 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
             @Override
             public void onItemClick(View view, int position) {
                 recycleViewAdapter.notifyDataSetChanged();
-                if(position >= 0 && position < news_list.size()) {
-                    Intent intent = new Intent(mcontext, NewsContentActivity.class);
-                    intent.putExtra("ID", news_list.get(position).id);
-                    startActivity(intent);
-                }
+//                int size = news_list.size();
+//                Toast.makeText(mcontext, "点击position:"+position+" size:"+size, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(mcontext, NewsContentActivity.class);
+                intent.putExtra("ID", news_list.get(position).id);
+                startActivity(intent);
+
             }
         });
         return view;
@@ -130,7 +133,8 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
             @Override
             public void onSuccess(List<SimpleNews> data) {
                 news_list = data;
-                ((NewsRecycleViewAdapter)recycleViewAdapter).changeToNews(news_list);
+                recycleViewAdapter.changeToNews(news_list);
+                recycleViewAdapter.clearClicked();
                 recycleViewAdapter.notifyDataSetChanged();
                 swipeLayout.setRefreshing(false);
             }

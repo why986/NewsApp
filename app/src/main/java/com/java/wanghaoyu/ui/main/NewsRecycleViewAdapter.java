@@ -18,16 +18,20 @@ import com.java.wanghaoyu.R;
 import com.java.wanghaoyu.SimpleNews;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
-public class NewsRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
-        {
+public class NewsRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final static int TYPE_CONTENT=0;//正常内容
     private final static int TYPE_FOOTER=1;//下拉刷新
     List<SimpleNews> news; // 数据源
     Context context;    // 上下文Context
     ViewGroup parent;
-    RecyclerView recyclerView;
+    private HashSet<Integer> Clicked = new HashSet<Integer>();
+
+    public void clearClicked(){
+        Clicked.clear();
+    }
 
 
     // Provide a reference to the views for each data item
@@ -56,6 +60,7 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public NewsRecycleViewAdapter(List<SimpleNews> n, Context c) {
         news = n;
         context = c;
+
     }
 
     public NewsRecycleViewAdapter(Context c) {
@@ -65,8 +70,7 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
 
     public void changeToNews(List<SimpleNews> n){
-        news.clear();
-        news.addAll(n);
+        news = n;
     }
 
     public void addNews(List<SimpleNews> n){
@@ -108,6 +112,9 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 t1.setText(n.title);
                 t2.setText(n.source);
                 t3.setText(n.time);
+                if (Clicked.contains(position))
+                    t1.setTextColor(0xFF888888);
+
                 // item click
                 if (mOnItemClickListener != null) {
                     ((MyViewHolder) holder).oneNewsView.setOnClickListener(new View.OnClickListener() {
@@ -115,11 +122,8 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         public void onClick(View view) {
                             if(position >= 0 && position < news.size()) {
                                 mOnItemClickListener.onItemClick(view, position);
-                                // 设置阅读变色
-//                                t1.setTextColor(0xFF888888);
-                                Manager manager = Manager.getInstance(context);
-                                manager.setSimpleNewsRead(news.get(position).id);
-
+                                Clicked.add(position);
+                                notifyDataSetChanged();
                             }
                         }
                     });
