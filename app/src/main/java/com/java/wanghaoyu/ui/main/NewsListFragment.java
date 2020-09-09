@@ -106,7 +106,7 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
         recycleViewAdapter.setOnItemClickListener(new NewsRecycleViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-//                Toast.makeText(mcontext, "这是条目" + news_list.get(position).title, Toast.LENGTH_LONG).show();
+                recycleViewAdapter.notifyDataSetChanged();
                 if(position >= 0 && position < news_list.size()) {
                     Intent intent = new Intent(mcontext, NewsContentActivity.class);
                     intent.putExtra("ID", news_list.get(position).id);

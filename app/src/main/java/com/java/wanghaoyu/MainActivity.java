@@ -1,7 +1,8 @@
 package com.java.wanghaoyu;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SearchView;
@@ -16,23 +17,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.java.wanghaoyu.ui.main.NewsListFragment;
 import com.java.wanghaoyu.ui.main.ViewPagerAdapter;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.concurrent.TimeUnit;
-
-import javax.net.ssl.HttpsURLConnection;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPagerAdapter adapter;
     private ViewPager viewpager;
     private TabLayout tabLayout;
-    private SearchView searchView;
+    DatabaseHelper databaseHelper = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewpager);
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        searchView = (SearchView) findViewById(R.id.searchVIew);
 
         initMain();
     }
@@ -72,6 +55,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+
+
+
     private void initToolBar(){
         setSupportActionBar(mtbar);
 
@@ -80,6 +67,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(false);
+        // 显示“开始搜索”的按钮
+        searchView.setSubmitButtonEnabled(true);
+        // 提示内容右边提供一个将提示内容放到搜索框的按钮
+        searchView.setQueryRefinementEnabled(true);
         return true;
     }
 
@@ -119,6 +116,25 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    protected void onPostResume() {
+        super.onPostResume();
+        initData();
+    }
+
+    private void initData(){
+        databaseHelper = DatabaseHelper.getHelper(this);
+
+        if (databaseHelper.isWordTableEmpty()){
+            Word word0 = new Word("abolish");
+            Word word1 = new Word("accuse");
+            Word word2 = new Word("account");
+
+            databaseHelper.insertWord(word0);
+            databaseHelper.insertWord(word1);
+            databaseHelper.insertWord(word2);
+        }
     }
 
 }

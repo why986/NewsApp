@@ -36,5 +36,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'com.squareup.okhttp3:okhttp:4.8.1'
     implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
+    compile files('libs/ormlite-android-5.1.jar')
+    compile files('libs/ormlite-core-5.1.jar')
 
 }

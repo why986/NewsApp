@@ -3,6 +3,7 @@ package com.java.wanghaoyu;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -14,6 +15,7 @@ public class NewsContentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_cotent);
+
         Bundle bundle = getIntent().getExtras();
         assert bundle != null;
         final String id = bundle.getString("ID");
@@ -39,9 +41,12 @@ public class NewsContentActivity extends AppCompatActivity {
                 view_content.setText(detailedNews.content);
             }
         }, id);
-
+        view_content = (TextView) findViewById(R.id.textView_Content);
+        view_content.setMovementMethod(ScrollingMovementMethod.getInstance());
 
     }
+
+
 
 
 }

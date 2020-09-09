@@ -115,11 +115,11 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         public void onClick(View view) {
                             if(position >= 0 && position < news.size()) {
                                 mOnItemClickListener.onItemClick(view, position);
-
                                 // 设置阅读变色
-                                t1.setTextColor(0xFF888888);
+//                                t1.setTextColor(0xFF888888);
                                 Manager manager = Manager.getInstance(context);
                                 manager.setSimpleNewsRead(news.get(position).id);
+
                             }
                         }
                     });

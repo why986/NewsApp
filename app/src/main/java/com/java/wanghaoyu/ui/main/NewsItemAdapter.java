@@ -51,13 +51,9 @@ public class NewsItemAdapter extends BaseAdapter {
         TextView t3 = (TextView) oneNewsView.findViewById(R.id.textView_news_date);
 
         SimpleNews news = mnews_list.get(position);
-//        System.out.println("TITLE: "+news.title);
         t1.setText(news.title);
         t2.setText(news.source);
         t3.setText(news.time);
-//        t1.setText("TITLE");
-//        t2.setText("SOURCE");
-//        t3.setText("DATE");
         if(news.hasRead){
             t1.setTextColor(0xFF888888);
         }
