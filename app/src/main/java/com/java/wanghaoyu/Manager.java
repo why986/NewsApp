@@ -171,6 +171,7 @@ public class Manager {
                     }
             }catch (SocketTimeoutException e)
             {
+                Log.d("READ", "TIMEOUT");
                 return new Result("TIMEOUT");
             }
             catch (Exception e){
@@ -182,7 +183,7 @@ public class Manager {
         @Override
         protected void onPostExecute(Result result) {
             if(this.type.equals("DetailedNews")) {
-                if (result.data != null)
+                if (result.detailedNewsData != null)
                     detailedNewsCallBack.onSuccess(result.detailedNewsData);
                 else
                     detailedNewsCallBack.onError(result.errorData);
@@ -258,7 +259,7 @@ public class Manager {
 
     public void getDetailedNews(DetailedNewsCallBack detailedNewsCallBack, final String id)
     {
-        new MyTask(detailedNewsCallBack, "https://covid-dashboard.aminer.cn/api/event/" + id);
+        new MyTask(detailedNewsCallBack, "https://covid-dashboard.aminer.cn/api/event/" + id).execute();
     }
 
     public DetailedNews getDetailedNewsFromDatabase(String id){
