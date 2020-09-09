@@ -24,5 +24,6 @@ public class SearchableActivity extends AppCompatActivity {
         } else {
             mTvWord.setText("R.string.word_not_found");
         }
+        System.out.println();
     }
 }

@@ -2,14 +2,19 @@ package com.java.wanghaoyu;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.Menu;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 public class NewsContentActivity extends AppCompatActivity {
     TextView view_title;
     TextView view_content;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +51,8 @@ public class NewsContentActivity extends AppCompatActivity {
         view_content.setMovementMethod(ScrollingMovementMethod.getInstance());
 
     }
+
+
 
 
 

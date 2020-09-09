@@ -1,10 +1,12 @@
 package com.java.wanghaoyu;
 
 import android.app.SearchManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewpager;
     private TabLayout tabLayout;
     DatabaseHelper databaseHelper = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,17 +66,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
-
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(getApplicationContext(), SearchableActivity.class)));
         searchView.setIconifiedByDefault(false);
         // 显示“开始搜索”的按钮
         searchView.setSubmitButtonEnabled(true);
         // 提示内容右边提供一个将提示内容放到搜索框的按钮
         searchView.setQueryRefinementEnabled(true);
         return true;
+
     }
 
     @Override
@@ -117,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
     protected void onPostResume() {
         super.onPostResume();
         initData();
@@ -135,5 +138,8 @@ public class MainActivity extends AppCompatActivity {
             databaseHelper.insertWord(word2);
         }
     }
+
+
+
 
 }

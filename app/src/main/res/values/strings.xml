@@ -9,4 +9,5 @@
     <string name="line_chart_title2">死亡病例数据</string>
     <string name="regionText">地区：</string>
     <string name="regionButton">确认</string>
+    <string name="search">Search</string>
 </resources>
