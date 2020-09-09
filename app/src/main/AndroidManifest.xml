@@ -24,6 +24,7 @@
                 android:name="android.app.default_searchable"
                 android:value=".SearchableActivity" />
 
+
         </activity>
 
         <activity android:name=".SearchableActivity">
@@ -37,7 +38,10 @@
         </activity>
 
 
-        <activity android:name=".NewsContentActivity" />
+        <activity android:name=".NewsContentActivity">
+
+        </activity>
+
 
         <activity android:name=".LineChartActivity" />
 
