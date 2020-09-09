@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -118,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
     protected void onPostResume() {
         super.onPostResume();
         initData();
@@ -136,5 +138,6 @@ public class MainActivity extends AppCompatActivity {
             databaseHelper.insertWord(word2);
         }
     }
+
 
 }

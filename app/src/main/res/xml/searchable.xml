@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
-    android:label="label"
-    android:hint="hint"
-    android:searchSuggestAuthority="com.java.wanghaoyu.MySuggestionProvider"
-    android:searchSuggestSelection=" ?" >
+    android:label="@string/app_name"
+    android:hint="HINT"
+    android:searchSuggestAuthority="com.schaepher.memorywarehouse.DictionaryProvider"
+    android:searchSuggestIntentAction="android.intent.action.VIEW">
 </searchable>
-    
