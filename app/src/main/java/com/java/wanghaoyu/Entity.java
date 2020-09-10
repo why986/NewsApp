@@ -15,10 +15,4 @@ public class Entity {
 
 }
 
-public class Relation{
-    public String relation;
-    public String url;
-    public String label;
-    public boolean forward;
 
-}

@@ -2,18 +2,22 @@ package com.java.wanghaoyu;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class NewsContentActivity extends AppCompatActivity {
-    TextView view_title;
-    TextView view_content;
+    public TextView view_title;
+    public TextView view_content;
 
 
     @Override
@@ -52,6 +56,19 @@ public class NewsContentActivity extends AppCompatActivity {
 
     }
 
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.share_button:
+                Manager manager = Manager.getInstance(this);
+                String title, content;
+                NewsContentActivity a = (NewsContentActivity) view.getContext();
+                title = a.view_title.getText().toString();
+                content = a.view_content.getText().toString();
+                Toast.makeText(this, "分享新闻："+title, Toast.LENGTH_LONG).show();
+                manager.shareNews(this, title, content);
+                break;
+        }
+    }
 
 
 
