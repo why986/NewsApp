@@ -86,14 +86,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClick(View view){
+        Intent intent = new Intent();
         switch (view.getId()) {
             case R.id.button1:
-                Intent intent = new Intent();
                 intent.setClass(MainActivity.this, LineChartActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.button2:
+                intent.setClass(MainActivity.this, EntityActivity.class);
+                startActivity(intent);
                 break;
 
             case R.id.button3:

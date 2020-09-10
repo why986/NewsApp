@@ -10,4 +10,5 @@
     <string name="regionText">地区：</string>
     <string name="regionButton">确认</string>
     <string name="search">Search</string>
+    <string name="entity_search_hint">COVID-19知识图谱搜索</string>
 </resources>

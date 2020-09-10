@@ -29,7 +29,7 @@ public class NewsContentActivity extends AppCompatActivity {
         assert bundle != null;
         final String id = bundle.getString("ID");
         final Manager manager = Manager.getInstance(this);
-        Log.d("NewsContentActivity", "ok");
+//        Log.d("NewsContentActivity", "ok");
         manager.getDetailedNews(new Manager.DetailedNewsCallBack() {
             @Override
             public void onError(String data) {

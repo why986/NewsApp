@@ -13,7 +13,7 @@
 
 
     <include
-        layout="@layout/news_main"
+        layout="@layout/main_news"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/transparent" />

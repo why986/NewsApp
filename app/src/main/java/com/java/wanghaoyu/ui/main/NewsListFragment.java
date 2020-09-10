@@ -7,15 +7,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.java.wanghaoyu.MainActivity;
 import com.java.wanghaoyu.Manager;
 import com.java.wanghaoyu.NewsContentActivity;
 import com.java.wanghaoyu.R;
 import com.java.wanghaoyu.SimpleNews;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -43,16 +42,20 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState)
+    {
 
 
-        view =  inflater.inflate(R.layout.new_list_fragment, container, false);
+        view =  inflater.inflate(R.layout.fragment_news_list, container, false);
         mcontext = view.getContext();
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayout);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycle_view_news);
+        DividerItemDecoration divider = new DividerItemDecoration(mcontext, DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(divider);
         swipeLayout.setOnRefreshListener(this);
         swipeLayout.setColorSchemeResources(android.R.color.holo_blue_light,
                 android.R.color.holo_red_light);
+
         // use a linear layout manager
         layoutManager = new LinearLayoutManager(mcontext);
         recyclerView.setLayoutManager(layoutManager);

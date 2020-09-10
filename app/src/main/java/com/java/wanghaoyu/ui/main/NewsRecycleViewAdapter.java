@@ -2,18 +2,14 @@ package com.java.wanghaoyu.ui.main;
 
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.java.wanghaoyu.Manager;
 import com.java.wanghaoyu.R;
 import com.java.wanghaoyu.SimpleNews;
 
@@ -83,13 +79,13 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                                                       int viewType) {
         if (viewType==TYPE_FOOTER){
             View v = (View) LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.footview, parent, false);
+                    .inflate(R.layout.item_news_footview, parent, false);
             this.parent = parent;
             return new FootViewHolder(v);
         }
         else {
             View v = (View) LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.news_item, parent, false);
+                    .inflate(R.layout.item_news_list, parent, false);
             this.parent = parent;
             MyViewHolder vh = new MyViewHolder(v);
             return vh;
