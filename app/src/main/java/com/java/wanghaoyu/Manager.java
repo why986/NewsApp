@@ -21,6 +21,7 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -67,10 +68,16 @@ public class Manager {
         void onSuccess(JSONObject data);
     }
 
+    public interface EntityCallBack{
+        void onError(String data);
+        void onSuccess(List<Entity> data);
+    }
+
     private static class MyTask extends AsyncTask<Void, Void, MyTask.Result> {
         SimpleNewsCallBack simpleNewsCallBack;
         DetailedNewsCallBack detailedNewsCallBack;
         CovidDataCallBack covidDataCallBack;
+        EntityCallBack entityCallBack;
         String urlStr;
         String type;
         int page;
@@ -93,17 +100,23 @@ public class Manager {
             this.covidDataCallBack = covidDataCallBack; this.urlStr = urlStr; this.region = region; this.type = "CovidData";
         }
 
+        MyTask(EntityCallBack entityCallBack, String urlStr, String keyword){
+            this.entityCallBack = entityCallBack; this.urlStr = urlStr; this.keyword = keyword; this.type = "Entity";
+        }
+
         static class Result{
             public List<SimpleNews> data;
             public String errorData;
             public DetailedNews detailedNewsData;
             public JSONObject covidData;
+            public List<Entity> entityData;
             public Result(List<SimpleNews> data){
                 this.data = data;
             }
             public Result(String errorData) {this.errorData = errorData;}
             public Result(DetailedNews detailedNewsData) {this.detailedNewsData = detailedNewsData;}
             public Result(JSONObject covidData) {this.covidData = covidData;}
+            public Result(List<Entity> entityData, String errorData) { this.entityData = entityData; }
         }
 
         @Override
@@ -137,7 +150,7 @@ public class Manager {
                 String rawData = builder.toString();
 
                 if(this.type.equals("DetailedNews")) {
-                    JSONObject newsJson = new JSONObject(new JSONObject(rawData).getString("data"));
+                    JSONObject newsJson = new JSONObject(rawData).getJSONObject("data");
 
                     return new Result(new DetailedNews(newsJson.getString("_id"),
                             newsJson.getString("title"),
@@ -148,6 +161,41 @@ public class Manager {
                 else if(this.type.equals("CovidData"))
                 {
                     return new Result(new JSONObject(rawData));//.getJSONObject(region));
+                }
+                else if(this.type.equals("Entity")){
+                    JSONArray entityJsonArray = new JSONObject(rawData).getJSONArray("data");
+                    List<Entity> entityList = new ArrayList<>();
+                    for(int i = 0; i < entityJsonArray.length(); ++i){
+                        JSONObject entityJson = entityJsonArray.getJSONObject(i);
+                        JSONObject abstractInfo = entityJson.getJSONObject("abstractInfo");
+
+                        String wiki = abstractInfo.getString("enwiki");
+                        if("".equals(wiki))
+                            wiki = abstractInfo.getString("baidu");
+                        if("".equals(wiki))
+                            wiki = abstractInfo.getString("zhwiki");
+
+                        JSONObject covidInfo = abstractInfo.getJSONObject("COVID");
+                        List<Relation> relations = new ArrayList<>();
+                        JSONArray relationJsonArray = covidInfo.getJSONArray("relations");
+                        for(int j = 0; j < relationJsonArray.length(); ++j)
+                        {
+                            JSONObject relationJson = relationJsonArray.getJSONObject(j);
+                            relations.add(new Relation(relationJson.getString("relation"),
+                                    relationJson.getString("url"),
+                                    relationJson.getString("label"),
+                                    relationJson.getBoolean("forward")));
+                        }
+
+                        entityList.add(new Entity(entityJson.getString("url"),
+                                entityJson.getString("label"),
+                                wiki,
+                                entityJson.getString("type"),
+                                entityJson.getString("img"),
+                                covidInfo.getJSONObject("properties"),
+                                relations));
+                    }
+                    return new Result(entityList, null);
                 }
                 else {
                         List<SimpleNews> newsList = new ArrayList<>();
@@ -200,6 +248,12 @@ public class Manager {
                     covidDataCallBack.onSuccess(result.covidData);
                 else
                     covidDataCallBack.onError(result.errorData);
+            }
+            else if(this.type.equals("Entity")){
+                if (result.entityData != null)
+                    entityCallBack.onSuccess(result.entityData);
+                else
+                    entityCallBack.onError(result.errorData);
             }
             else{
                 if (result.data != null)
@@ -320,9 +374,9 @@ public class Manager {
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT, title);
         if(content.length() > 50)
-            intent.putExtra(Intent.EXTRA_TEXT, content.substring(0, 50) + "...");
+            intent.putExtra(Intent.EXTRA_TEXT, "标题：" + title +  "\n新闻摘要：" + content.substring(0, 50) + "...");
         else
-            intent.putExtra(Intent.EXTRA_TEXT, content);
+            intent.putExtra(Intent.EXTRA_TEXT, "标题：" + title +  "\n新闻：" + content);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(Intent.createChooser(intent, "Share to:"));
     }
