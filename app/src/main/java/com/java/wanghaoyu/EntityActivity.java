@@ -72,7 +72,7 @@ public class EntityActivity extends AppCompatActivity {
                         entities = data;
                         adapter.setData(entities);
                         adapter.notifyDataSetChanged();
-                        Toast.makeText(context, "Size = : "+entities.size(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "搜索到结果"+entities.size()+"条", Toast.LENGTH_LONG).show();
                     }
                 }, query);
                 // End
