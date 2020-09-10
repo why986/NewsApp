@@ -13,10 +13,10 @@ public class Entity {
     public JSONObject properties;
     public List<Relation> relations;
 
-    public Entity(String url, String label, String wiki, String type,
+    public Entity(String url, String label, String wiki,
                   String img, JSONObject properties, List<Relation> relations)
     {
-        this.url = url; this.label = label; this.wiki = wiki; this.type = type;
+        this.url = url; this.label = label; this.wiki = wiki;
         this.img = img; this.properties = properties; this.relations = relations;
     }
 }

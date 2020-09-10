@@ -190,7 +190,6 @@ public class Manager {
                         entityList.add(new Entity(entityJson.getString("url"),
                                 entityJson.getString("label"),
                                 wiki,
-                                entityJson.getString("type"),
                                 entityJson.getString("img"),
                                 covidInfo.getJSONObject("properties"),
                                 relations));
