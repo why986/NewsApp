@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -56,12 +57,24 @@ public class EntityActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(context, "搜索Entity: "+query, Toast.LENGTH_LONG).show();
+
                 // 更新entities by query
-                entities = new ArrayList<Entity>();
-                for(int i=0;i<30;i++) entities.add(newEntity());
-                adapter.setData(entities);
-                adapter.notifyDataSetChanged();
+                final Manager manager = Manager.getInstance(context);
+
+                manager.getEntities(new Manager.EntityCallBack() {
+                    @Override
+                    public void onError(String data) {
+                        Toast.makeText(context, "ERROR:"+data, Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onSuccess(List<Entity> data) {
+                        entities = data;
+                        adapter.setData(entities);
+                        adapter.notifyDataSetChanged();
+                        Toast.makeText(context, "Size = : "+entities.size(), Toast.LENGTH_LONG).show();
+                    }
+                }, query);
                 // End
                 return false;
             }
@@ -73,9 +86,6 @@ public class EntityActivity extends AppCompatActivity {
 
     }
 
-    Entity newEntity(){
-        return new Entity();
-    }
 
 
 }

@@ -9,7 +9,6 @@ public class Entity {
     public String url;
     public String label;
     public String wiki;
-    public String type;
     public String img;
     public JSONObject properties;
     public List<Relation> relations;
