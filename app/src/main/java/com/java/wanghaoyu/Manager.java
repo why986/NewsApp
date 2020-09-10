@@ -428,7 +428,7 @@ public class Manager {
     public void getExpertList(ExpertCallBack expertCallBack)
     {
         new MyTask(expertCallBack,
-                "https://innovaapi.aminer.cn/predictor/api/v1/valhalla/highlight/get_ncov_expers_list?v=2");
+                "https://innovaapi.aminer.cn/predictor/api/v1/valhalla/highlight/get_ncov_expers_list?v=2").execute();
     }
 }
 
