@@ -16,4 +16,9 @@ public class Expert {
         this.avatar = avatar; this.id = id; this.name = name; this.name_zh = name_zh;
         this.indices = indices; this.is_passedaway = is_passedaway; this.profile = profile;
     }
+
+    public Expert(){
+        this.avatar = "avatar"; this.id = "id"; this.name = "name"; this.name_zh = "name_zh";
+        this.indices = null; this.is_passedaway = true; this.profile = null;
+    }
 }

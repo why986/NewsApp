@@ -18,6 +18,7 @@ import androidx.viewpager.widget.ViewPager;
 
 
 import com.google.android.material.tabs.TabLayout;
+import com.java.wanghaoyu.ExpertPackage.ExpertActivity;
 import com.java.wanghaoyu.ui.main.NewsListFragment;
 import com.java.wanghaoyu.ui.main.ViewPagerAdapter;
 
@@ -99,9 +100,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.button3:
+
                 break;
 
             case R.id.button4:
+                intent.setClass(MainActivity.this, ExpertActivity.class);
+                startActivity(intent);
                 break;
         }
 
