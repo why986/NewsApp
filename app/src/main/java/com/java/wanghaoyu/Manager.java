@@ -385,5 +385,11 @@ public class Manager {
     {
         new MyTask(covidDataCallBack, "https://covid-dashboard.aminer.cn/api/dist/epidemic.json", region).execute();
     }
+
+    public void getEntities(EntityCallBack entityCallBack, String keyword)
+    {
+        new MyTask(entityCallBack,
+                "https://innovaapi.aminer.cn/covid/api/v1/pneumonia/entityquery?entity=" + keyword, keyword).execute();
+    }
 }
 
