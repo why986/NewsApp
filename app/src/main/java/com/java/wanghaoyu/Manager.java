@@ -73,11 +73,17 @@ public class Manager {
         void onSuccess(List<Entity> data);
     }
 
+    public interface ExpertCallBack{
+        void onError(String data);
+        void onSuccess(List<Expert> data);
+    }
+
     private static class MyTask extends AsyncTask<Void, Void, MyTask.Result> {
         SimpleNewsCallBack simpleNewsCallBack;
         DetailedNewsCallBack detailedNewsCallBack;
         CovidDataCallBack covidDataCallBack;
         EntityCallBack entityCallBack;
+        ExpertCallBack expertCallBack;
         String urlStr;
         String type;
         int page;
@@ -104,12 +110,17 @@ public class Manager {
             this.entityCallBack = entityCallBack; this.urlStr = urlStr; this.keyword = keyword; this.type = "Entity";
         }
 
+        MyTask(ExpertCallBack expertCallBack, String urlStr){
+            this.expertCallBack = expertCallBack; this.urlStr = urlStr; this.type = "Expert";
+        }
+
         static class Result{
             public List<SimpleNews> data;
             public String errorData;
             public DetailedNews detailedNewsData;
             public JSONObject covidData;
             public List<Entity> entityData;
+            public List<Expert> expertData;
             public Result(List<SimpleNews> data){
                 this.data = data;
             }
@@ -117,6 +128,7 @@ public class Manager {
             public Result(DetailedNews detailedNewsData) {this.detailedNewsData = detailedNewsData;}
             public Result(JSONObject covidData) {this.covidData = covidData;}
             public Result(List<Entity> entityData, String errorData) { this.entityData = entityData; }
+            public Result(List<Expert> expertData, String null1, String null2) { this.expertData = expertData;}
         }
 
         @Override
@@ -196,6 +208,22 @@ public class Manager {
                     }
                     return new Result(entityList, null);
                 }
+                else if(this.type.equals("Expert")){
+                    List<Expert> expertList = new ArrayList<>();
+                    JSONArray expertJsonArray = new JSONObject(rawData).getJSONArray("data");
+                    for(int i = 0; i < expertJsonArray.length(); ++i)
+                    {
+                        JSONObject expertJson = expertJsonArray.getJSONObject(i);
+                        expertList.add(new Expert(expertJson.getString("avatar"),
+                                expertJson.getString("id"),
+                                expertJson.getString("name"),
+                                expertJson.getString("name_zh"),
+                                expertJson.getJSONObject("indices"),
+                                expertJson.getBoolean("is_passedaway"),
+                                expertJson.getJSONObject("profile")));
+                    }
+                    return new Result(expertList, null, null);
+                }
                 else {
                         List<SimpleNews> newsList = new ArrayList<>();
                         try {
@@ -253,6 +281,12 @@ public class Manager {
                     entityCallBack.onSuccess(result.entityData);
                 else
                     entityCallBack.onError(result.errorData);
+            }
+            else if(this.type.equals("Expert")){
+                if (result.expertData != null)
+                    expertCallBack.onSuccess(result.expertData);
+                else
+                    expertCallBack.onError(result.errorData);
             }
             else{
                 if (result.data != null)
@@ -389,6 +423,12 @@ public class Manager {
     {
         new MyTask(entityCallBack,
                 "https://innovaapi.aminer.cn/covid/api/v1/pneumonia/entityquery?entity=" + keyword, keyword).execute();
+    }
+
+    public void getExpertList(ExpertCallBack expertCallBack)
+    {
+        new MyTask(expertCallBack,
+                "https://innovaapi.aminer.cn/predictor/api/v1/valhalla/highlight/get_ncov_expers_list?v=2");
     }
 }
 
