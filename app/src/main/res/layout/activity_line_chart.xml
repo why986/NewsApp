@@ -24,8 +24,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="37dp"
+                android:layout_marginEnd="9dp"
                 android:text="@string/regionText"
+                android:textColor="@android:color/black"
                 android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@+id/regionEditText"
+                app:layout_constraintEnd_toStartOf="@+id/regionEditText"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,71 +39,81 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="9dp"
                 android:layout_marginTop="30dp"
+                android:layout_marginEnd="10dp"
                 android:ems="10"
                 android:inputType="textPersonName|text"
                 android:maxLines="1"
                 android:text="China"
                 app:layout_constraintBottom_toTopOf="@+id/textView"
+                app:layout_constraintEnd_toStartOf="@+id/button"
                 app:layout_constraintStart_toEndOf="@+id/textView3"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="142dp"
-                android:layout_marginTop="75dp"
-                android:layout_marginEnd="142dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/line_chart_title1"
                 android:textAlignment="center"
+                android:textColor="@android:color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/regionEditText" />
 
             <lecho.lib.hellocharts.view.LineChartView
                 android:id="@+id/line_chart"
                 android:layout_width="wrap_content"
                 android:layout_height="300dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="23dp"
+                android:layout_marginEnd="8dp"
                 android:clickable="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView"
-                tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteX="0dp" />
+                tools:ignore="MissingConstraints" />
 
             <TextView
                 android:id="@+id/textView2"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="164dp"
-                android:layout_marginTop="343dp"
-                android:layout_marginEnd="163dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="26dp"
                 android:text="@string/line_chart_title2"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                app:layout_constraintBottom_toTopOf="@+id/line_chart2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
+                app:layout_constraintTop_toBottomOf="@+id/line_chart" />
 
             <lecho.lib.hellocharts.view.LineChartView
                 android:id="@+id/line_chart2"
                 android:layout_width="wrap_content"
                 android:layout_height="300dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="26dp"
+                android:layout_marginEnd="8dp"
                 android:clickable="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView2"
-                tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteX="0dp" />
+                tools:ignore="MissingConstraints" />
 
             <Button
                 android:id="@+id/button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:layout_height="43dp"
                 android:layout_marginStart="11dp"
                 android:layout_marginTop="27dp"
                 android:layout_marginEnd="24dp"
-                android:layout_marginBottom="42dp"
+                android:background="@android:drawable/screen_background_dark_transparent"
                 android:text="@string/regionButton"
-                app:layout_constraintBottom_toTopOf="@+id/line_chart"
+                android:textColor="@color/cardview_light_background"
+                app:layout_constraintBottom_toBottomOf="@+id/regionEditText"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/regionEditText"
                 app:layout_constraintTop_toTopOf="parent" />

@@ -227,9 +227,9 @@ public class ExpertListViewAdapter extends BaseAdapter {
             final ImageView imageView = (ImageView) listView.findViewWithTag(tag);
             if (imageView != null) {
                 imageView.setImageBitmap(bitmap);
-                System.out.println("SetimageSuccess "+tag);
+                System.out.println("Set Image Success "+tag);
             } else{
-                System.out.println("SetimageFail "+tag);
+                System.out.println("Set Image Fail "+tag);
             }
         }
 
