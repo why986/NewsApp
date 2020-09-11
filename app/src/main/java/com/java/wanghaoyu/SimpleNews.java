@@ -1,8 +1,5 @@
 package com.java.wanghaoyu;
 
-import org.json.JSONObject;
-import org.json.JSONException;
-
 public class SimpleNews {
     public String id;
     public String title;
@@ -19,17 +16,20 @@ public class SimpleNews {
     public SimpleNews(String id, String title, String time, String type, String source, String hasRead)
     {
         this.id = id; this.title = title; this.time = time; this.type = type; this.source = source;
+        if(id.endsWith("'"))
+            this.id = id.substring(1, id.length()-1);
+        if(title.endsWith("'"))
+            this.title = title.substring(1, title.length()-1);
+        if(time.endsWith("'"))
+            this.time = time.substring(1, time.length()-1);
+        if(type.endsWith("'"))
+            this.type = type.substring(1, type.length()-1);
+        if(source.endsWith("'"))
+            this.source = source.substring(1, source.length()-1);
         if(hasRead.equals("TRUE"))
             this.hasRead = true;
         else this.hasRead = false;
     }
 
-    public SimpleNews(JSONObject data) throws JSONException{
-        this.id = data.getString("_id");
-        this.title = data.getString("title");
-        this.time = data.getString("time");
-        this.type = data.getString("type");
-        this.source = data.getString("source");
-    }
 
 }

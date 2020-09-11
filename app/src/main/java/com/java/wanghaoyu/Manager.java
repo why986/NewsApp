@@ -344,7 +344,7 @@ public class Manager {
                 "type=? AND page=?", new String[]{"'" + type + "'", String.valueOf(page)}, null, null, null);
         while(cursor.moveToNext())
         {
-            list.add(new SimpleNews(cursor.getString(cursor.getColumnIndex("id")),
+            list.add(new SimpleNews (cursor.getString(cursor.getColumnIndex("id")),
                     cursor.getString(cursor.getColumnIndex("title")),
                     cursor.getString(cursor.getColumnIndex("time")),
                     cursor.getString(cursor.getColumnIndex("type")),
