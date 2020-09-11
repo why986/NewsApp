@@ -110,6 +110,8 @@ public class NewsRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 t3.setText(n.time);
                 if (Clicked.contains(position))
                     t1.setTextColor(0xFF888888);
+                else
+                    t1.setTextColor(0xFF000000);
 
                 // item click
                 if (mOnItemClickListener != null) {
