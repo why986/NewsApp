@@ -211,6 +211,7 @@ public class Manager {
                 else if(this.type.equals("Expert")){
                     List<Expert> expertList = new ArrayList<>();
                     JSONArray expertJsonArray = new JSONObject(rawData).getJSONArray("data");
+                    //Log.d("READ", String.valueOf(expertJsonArray.length()));
                     for(int i = 0; i < expertJsonArray.length(); ++i)
                     {
                         JSONObject expertJson = expertJsonArray.getJSONObject(i);
