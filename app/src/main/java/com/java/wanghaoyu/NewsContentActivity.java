@@ -64,7 +64,7 @@ public class NewsContentActivity extends AppCompatActivity {
                 NewsContentActivity a = (NewsContentActivity) view.getContext();
                 title = a.view_title.getText().toString();
                 content = a.view_content.getText().toString();
-                Toast.makeText(this, "分享新闻："+title, Toast.LENGTH_LONG).show();
+//                Toast.makeText(this, "分享新闻："+title, Toast.LENGTH_LONG).show();
                 manager.shareNews(this, title, content);
                 break;
         }

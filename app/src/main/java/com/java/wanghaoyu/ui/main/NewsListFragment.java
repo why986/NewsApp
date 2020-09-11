@@ -7,7 +7,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.java.wanghaoyu.MainActivity;
 import com.java.wanghaoyu.Manager;
 import com.java.wanghaoyu.NewsContentActivity;
 import com.java.wanghaoyu.R;
@@ -140,6 +142,7 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
                 recycleViewAdapter.clearClicked();
                 recycleViewAdapter.notifyDataSetChanged();
                 swipeLayout.setRefreshing(false);
+                Toast.makeText(mcontext, "刷新成功", Toast.LENGTH_LONG).show();
             }
         }, type, page_count, SIZE);
     }
