@@ -127,7 +127,7 @@ public class EntityRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.
             holder.textView_wiki.setText(e.wiki);
             holder.textView_url.setText("url:" + e.url);
             // Image
-            if(e.img != "null") {
+            if(!e.img.equals("null")) {
                 new Thread(new Runnable() {
                     Bitmap bitmap;
                     @Override
@@ -190,15 +190,13 @@ public class EntityRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.
     public static InputStream getImageViewInputStream(String path) throws IOException {
         InputStream inputStream = null;
         URL url = new URL(path);
-        if (url != null) {
-            HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
-            httpURLConnection.setConnectTimeout(3000);
-            httpURLConnection.setRequestMethod("GET");
-            httpURLConnection.setDoInput(true);
-            int responseCode = httpURLConnection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                inputStream = httpURLConnection.getInputStream();
-            }
+        HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+        httpURLConnection.setConnectTimeout(3000);
+        httpURLConnection.setRequestMethod("GET");
+        httpURLConnection.setDoInput(true);
+        int responseCode = httpURLConnection.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            inputStream = httpURLConnection.getInputStream();
         }
         return inputStream;
     }

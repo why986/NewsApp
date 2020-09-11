@@ -26,12 +26,10 @@ public class ExpertActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expert);
         listView = (ListView)findViewById(R.id.listViewExpert);
-        mAdapter = new ExpertListViewAdapter(this);
+        mAdapter = new ExpertListViewAdapter(this, listView);
         listView.setAdapter(mAdapter);
         context = this;
-        // Get Expert List
         final Manager manager = Manager.getInstance(this);
-
         manager.getExpertList(new Manager.ExpertCallBack() {
             @Override
             public void onError(String data) {
@@ -46,11 +44,5 @@ public class ExpertActivity extends AppCompatActivity {
                 Toast.makeText(context, "知疫学者共"+expertList.size()+"人", Toast.LENGTH_LONG).show();
             }
         });
-        // End
-//        expertList = new ArrayList<Expert>();
-//        for (int i=9;i>0;i--) expertList.add(new Expert());
-//        mAdapter.setData(expertList);
-//        mAdapter.notifyDataSetChanged();
-
     }
 }
