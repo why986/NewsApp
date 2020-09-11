@@ -1,4 +1,4 @@
-package com.java.wanghaoyu;
+package com.java.wanghaoyu.EntityPackage;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -6,17 +6,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.java.wanghaoyu.EntityPackage.Entity;
 import com.java.wanghaoyu.EntityPackage.EntityRecycleViewAdapter;
-import com.java.wanghaoyu.ui.main.NewsRecycleViewAdapter;
+import com.java.wanghaoyu.Manager;
+import com.java.wanghaoyu.R;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 

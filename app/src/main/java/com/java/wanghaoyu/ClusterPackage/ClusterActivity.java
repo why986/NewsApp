@@ -1,16 +1,54 @@
-package com.java.wanghaoyu;
+package com.java.wanghaoyu.ClusterPackage;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.widget.SearchView;
+
+import com.java.wanghaoyu.ClusterPackage.Cluster;
+import com.java.wanghaoyu.EntityPackage.Entity;
+import com.java.wanghaoyu.EntityPackage.EntityRecycleViewAdapter;
+import com.java.wanghaoyu.R;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 public class ClusterActivity extends AppCompatActivity {
+    RecyclerView recyclerView;
+    Context context;
+    ClusterAdapter adapter;
+    Cluster[] clusters;
+    List<Cluster> clustersList;
+
+
+    void InitCreate(){
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        context = this;
+        clustersList = new ArrayList<>(Arrays.asList(clusters));
+        recyclerView = (RecyclerView) findViewById(R.id.clusterRecycleView);
+        adapter = new ClusterAdapter(this, clustersList);
+        DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(divider);
+
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(manager);
+
+        recyclerView.setAdapter(adapter);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cluster);
-        Cluster[] clusters = new Cluster[8];
+        clusters = new Cluster[8];
         clusters[0] = new Cluster(new String[]{"流行病学", "研究", "症状"},
                 new String[]{
                         "上海市公共卫生临床中心与转化医学国家重大科技基础设施研究人员揭示了新型冠状病毒性肺炎的分子流行病学和临床表现特征，尤其是发现了向重症转化的关键预警因子。他们指出疾病严重程度的决定因素似乎主要来自于宿主因素，比如年龄、淋巴细胞减少症以及相关的细胞因子风暴，而与病毒的遗传变异没有显著的关联。",
@@ -732,5 +770,6 @@ public class ClusterActivity extends AppCompatActivity {
                         "哈佛大学医学院的专家研究发现新冠病毒会攻击鼻子里的关键细胞，这也解释为什么一些新冠肺炎患者会失去嗅觉和味觉，因此完全或部分丧失嗅觉可能是感染新冠肺炎的最初信号。",
                         "杜兰大学医学院罗伯特・加里教授等研究发现新型病毒不是在实验室中构建的，也不是有目的性的人为操控的病毒，而是是自然产生的。",
                 });
+        InitCreate();
     }
 }

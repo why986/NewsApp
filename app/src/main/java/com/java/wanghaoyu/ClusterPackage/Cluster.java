@@ -1,4 +1,5 @@
-package com.java.wanghaoyu;
+package com.java.wanghaoyu.ClusterPackage;
+
 
 public class Cluster {
     public String[] keywords;

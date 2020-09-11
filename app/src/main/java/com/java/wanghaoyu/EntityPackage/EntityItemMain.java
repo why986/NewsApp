@@ -1,7 +1,5 @@
 package com.java.wanghaoyu.EntityPackage;
 
-import com.java.wanghaoyu.Entity;
-
 public class EntityItemMain extends EntityItem {
     public String url;
     public String label;

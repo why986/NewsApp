@@ -12,13 +12,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.java.wanghaoyu.Expert;
-import com.java.wanghaoyu.MainActivity;
 import com.java.wanghaoyu.R;
 
 import org.json.JSONException;
@@ -147,6 +144,7 @@ public class ExpertListViewAdapter extends BaseAdapter {
                     + "  P|" + e.indices.getString("pubs");
 
             // Image
+            holder.imageView.setImageDrawable(AppCompatResources.getDrawable(context,R.drawable.drawable_seach));
             if(e.avatar.length() < 10){
                 holder.imageView.setImageDrawable(AppCompatResources.getDrawable(context,R.drawable.drawable_seach));
             }else {
@@ -183,9 +181,7 @@ public class ExpertListViewAdapter extends BaseAdapter {
                     } else {
                         isVisible.add(position);
                     }
-//                    notifyImage(e.avatar, tag);
                     notifyDataSetChanged();
-//                    Toast.makeText(context, "position:"+position, Toast.LENGTH_LONG).show();
                 }
             }
         });

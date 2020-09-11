@@ -7,13 +7,11 @@ import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.java.wanghaoyu.Entity;
-import com.java.wanghaoyu.Expert;
 import com.java.wanghaoyu.Manager;
 import com.java.wanghaoyu.R;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ExpertActivity extends AppCompatActivity {
     private ListView listView;
@@ -25,6 +23,7 @@ public class ExpertActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expert);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         listView = (ListView)findViewById(R.id.listViewExpert);
         mAdapter = new ExpertListViewAdapter(this, listView);
         listView.setAdapter(mAdapter);

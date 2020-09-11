@@ -1,4 +1,6 @@
-package com.java.wanghaoyu;
+package com.java.wanghaoyu.EntityPackage;
+
+import com.java.wanghaoyu.Relation;
 
 import org.json.JSONObject;
 

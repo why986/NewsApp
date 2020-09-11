@@ -3,8 +3,6 @@ package com.java.wanghaoyu.EntityPackage;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.java.wanghaoyu.Entity;
 import com.java.wanghaoyu.R;
 import com.java.wanghaoyu.Relation;
-import com.java.wanghaoyu.ui.main.NewsRecycleViewAdapter;
 
 import org.json.JSONException;
 

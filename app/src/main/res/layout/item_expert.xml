@@ -7,15 +7,15 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView_hascp"
+        android:id="@+id/textView_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="24dp"
         android:text="无"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout_addition"
+        android:textAlignment="textStart"
+        android:textColor="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView_avator"
         app:layout_constraintTop_toBottomOf="@+id/textView_school" />
@@ -25,13 +25,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="16dp"
         android:text="无"
         android:textColor="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView_avator"
-        app:layout_constraintTop_toBottomOf="@+id/textView_title" />
+        app:layout_constraintTop_toBottomOf="@+id/textView_hascp" />
 
     <ImageView
         android:id="@+id/imageView_avator"
@@ -39,10 +39,8 @@
         android:layout_height="100dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
         android:maxHeight="150dp"
         android:minHeight="80dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView_hascp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/drawable_seach" />
@@ -58,20 +56,22 @@
         android:text="无"
         android:textAlignment="textStart"
         android:textColor="@android:color/black"
-        android:textSize="24sp"
+        android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView_avator"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView_title"
+        android:id="@+id/textView_hascp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="16dp"
         android:text="无"
-        android:textColor="@android:color/black"
+        android:textAlignment="textStart"
+        android:textColor="@android:color/holo_blue_dark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView_avator"
         app:layout_constraintTop_toBottomOf="@+id/textView_name" />
@@ -81,11 +81,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_hascp">
+        app:layout_constraintTop_toBottomOf="@+id/textView_title">
 
         <TextView
             android:id="@+id/textView_work"

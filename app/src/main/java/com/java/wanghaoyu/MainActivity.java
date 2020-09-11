@@ -18,6 +18,9 @@ import androidx.viewpager.widget.ViewPager;
 
 
 import com.google.android.material.tabs.TabLayout;
+import com.java.wanghaoyu.ClusterPackage.ClusterActivity;
+import com.java.wanghaoyu.ClusterPackage.ClusterAdapter;
+import com.java.wanghaoyu.EntityPackage.EntityActivity;
 import com.java.wanghaoyu.ExpertPackage.ExpertActivity;
 import com.java.wanghaoyu.ui.main.NewsListFragment;
 import com.java.wanghaoyu.ui.main.ViewPagerAdapter;
@@ -100,7 +103,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.button3:
-
+                intent.setClass(MainActivity.this, ClusterActivity.class);
+                startActivity(intent);
                 break;
 
             case R.id.button4:
