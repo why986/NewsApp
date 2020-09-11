@@ -340,7 +340,12 @@ public class Manager {
     public List<SimpleNews> getSimpleNewsListFromDatabase(String type, int page){
         dataBase = myDBOpenHelper.getReadableDatabase();
         List<SimpleNews> list = new ArrayList<>();
-        Cursor cursor = dataBase.query("simpleNews", new String[]{"id", "title", "time", "type", "source", "hasRead"},
+        Cursor cursor;
+        if(type.equals("all"))
+            cursor = dataBase.query("simpleNews", new String[]{"id", "title", "time", "type", "source", "hasRead"},
+                    "page=?", new String[]{String.valueOf(page)}, null, null, null);
+        else
+            cursor = dataBase.query("simpleNews", new String[]{"id", "title", "time", "type", "source", "hasRead"},
                 "type=? AND page=?", new String[]{"'" + type + "'", String.valueOf(page)}, null, null, null);
         while(cursor.moveToNext())
         {
@@ -350,6 +355,8 @@ public class Manager {
                     cursor.getString(cursor.getColumnIndex("type")),
                     cursor.getString(cursor.getColumnIndex("source")),
                     cursor.getString((cursor.getColumnIndex("hasRead")))));
+            Log.d("getSimpleNewsListFromDatabase",
+                    cursor.getString(cursor.getColumnIndex("source")));
         }
         cursor.close();
         return list;
