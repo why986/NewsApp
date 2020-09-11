@@ -18,6 +18,8 @@ import android.widget.Toast;
 public class NewsContentActivity extends AppCompatActivity {
     public TextView view_title;
     public TextView view_content;
+    public TextView vt;
+    public TextView vs;
 
 
     @Override
@@ -37,8 +39,12 @@ public class NewsContentActivity extends AppCompatActivity {
                     DetailedNews detailedNews = manager.getDetailedNewsFromDatabase(id);
                     view_title = (TextView) findViewById(R.id.textView_Title);
                     view_content = (TextView) findViewById(R.id.textView_Content);
+                    vs = (TextView) findViewById(R.id.textView_content_source);
+                    vt = (TextView) findViewById(R.id.textView_content_time);
                     view_title.setText(detailedNews.title);
                     view_content.setText(detailedNews.content);
+                    vt.setText(detailedNews.time);
+                    vs.setText(detailedNews.source);
                 }
             }
 
@@ -47,8 +53,12 @@ public class NewsContentActivity extends AppCompatActivity {
                 manager.insertDetailedNews(detailedNews);
                 view_title = (TextView) findViewById(R.id.textView_Title);
                 view_content = (TextView) findViewById(R.id.textView_Content);
+                vs = (TextView) findViewById(R.id.textView_content_source);
+                vt = (TextView) findViewById(R.id.textView_content_time);
                 view_title.setText(detailedNews.title);
                 view_content.setText(detailedNews.content);
+                vt.setText(detailedNews.time);
+                vs.setText(detailedNews.source);
             }
         }, id);
         view_content = (TextView) findViewById(R.id.textView_Content);

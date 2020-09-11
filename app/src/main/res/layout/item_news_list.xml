@@ -32,7 +32,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="8dp"
                 android:text="New Text"
-                android:textColor="@android:color/black"
+                android:textColor="#CD000000"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
                 app:layout_constraintEnd_toEndOf="parent"
