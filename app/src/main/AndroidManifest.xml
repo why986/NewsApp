@@ -18,7 +18,10 @@
         <activity android:name=".ClusterPackage.ClusterActivity"
             android:parentActivityName=".MainActivity">
         </activity>
-        <activity android:name=".ExpertPackage.ExpertActivity" />
+        <activity android:name=".ExpertPackage.ExpertActivity"
+            android:parentActivityName=".MainActivity">
+
+        </activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"

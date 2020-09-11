@@ -120,31 +120,31 @@ public class MainActivity extends AppCompatActivity {
         String type;
         switch (item.getItemId()) {
             case R.id.menu_item_minus:
-                Toast.makeText(MainActivity.this, "种类--", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "删除种类页面", Toast.LENGTH_LONG).show();
                 adapter.delFragment();
                 break;
             case R.id.menu_item_add_paper:
-                Toast.makeText(MainActivity.this, "种类++", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "添加种类Paper，爱学术", Toast.LENGTH_LONG).show();
                 type = "paper";
                 adapter.addFragment(new NewsListFragment(type), type);
                 break;
             case R.id.menu_item_add_all:
-                Toast.makeText(MainActivity.this, "种类++", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "添加页面All，所有信息全部知晓", Toast.LENGTH_LONG).show();
                 type = "all";
                 adapter.addFragment(new NewsListFragment(type), type);
                 break;
             case R.id.menu_item_add_points:
-                Toast.makeText(MainActivity.this, "种类++", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "添加种类Points，但Points似乎什么都没有", Toast.LENGTH_LONG).show();
                 type = "points";
                 adapter.addFragment(new NewsListFragment(type), type);
                 break;
             case R.id.menu_item_add_event:
-                Toast.makeText(MainActivity.this, "种类++", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "添加种类Event，关注大事件", Toast.LENGTH_LONG).show();
                 type = "events";
                 adapter.addFragment(new NewsListFragment(type), type);
                 break;
             case R.id.menu_item_add_news:
-                Toast.makeText(MainActivity.this, "种类++", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "添加种类News，时事一手掌握", Toast.LENGTH_LONG).show();
                 type = "news";
                 adapter.addFragment(new NewsListFragment(type), type);
                 break;
