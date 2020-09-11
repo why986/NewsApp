@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -69,9 +70,13 @@ public class ClusterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
         final ClusterAdapter.MainViewHolder holder = (MainViewHolder) viewHolder;
         final Cluster e = clusterList.get(position);
-        holder.txnum.setText(Integer.toString(position));
-        holder.txword.setText(String.join(", ", e.keywords));
-        holder.txnews.setText(String.join("\n\n", e.titles));
+        holder.txnum.setText(Integer.toString(position+1));
+        String w = String.join("  ", e.keywords)
+                + "\n\n共" + Integer.toString(e.titles.length) + "条新闻";
+        holder.txword.setText(w);
+        int l = Math.min(e.titles.length, 10);
+        holder.txnews.setText(String.join("\n\n", Arrays.copyOfRange(e.titles, 0, l))
+            + "\n\n略"+ Integer.toString(e.titles.length - l) +"条......");
 
     }
 
