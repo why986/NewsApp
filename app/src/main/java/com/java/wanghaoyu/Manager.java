@@ -211,6 +211,7 @@ public class Manager {
                 else if(this.type.equals("Expert")){
                     List<Expert> expertList = new ArrayList<>();
                     JSONArray expertJsonArray = new JSONObject(rawData).getJSONArray("data");
+                    //Log.d("READ", String.valueOf(expertJsonArray.length()));
                     for(int i = 0; i < expertJsonArray.length(); ++i)
                     {
                         JSONObject expertJson = expertJsonArray.getJSONObject(i);
@@ -428,7 +429,7 @@ public class Manager {
     public void getExpertList(ExpertCallBack expertCallBack)
     {
         new MyTask(expertCallBack,
-                "https://innovaapi.aminer.cn/predictor/api/v1/valhalla/highlight/get_ncov_expers_list?v=2");
+                "https://innovaapi.aminer.cn/predictor/api/v1/valhalla/highlight/get_ncov_expers_list?v=2").execute();
     }
 }
 
