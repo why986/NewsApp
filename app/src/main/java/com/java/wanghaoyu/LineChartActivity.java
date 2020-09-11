@@ -3,6 +3,7 @@ package com.java.wanghaoyu;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,6 +45,7 @@ public class LineChartActivity extends AppCompatActivity {
     private Date beginDate;
     private SimpleDateFormat simpleDateFormat;
     private EditText regionEditText ;
+    private int maxCureY, maxDeadY;
 
     private static Manager manager;
 
@@ -87,11 +89,19 @@ public class LineChartActivity extends AppCompatActivity {
                             getPointValues(data.getJSONObject(region));
                         }
                         catch (JSONException e){
-                            new AlertDialog.Builder(LineChartActivity.this)
-                                    .setTitle("错误")
-                                    .setMessage("请输入正确的地区，格式应为国家|省|市")
-                                    .setPositiveButton("确定", null)
-                                    .show();
+                            if(!region.contains("|"))
+                                new AlertDialog.Builder(LineChartActivity.this)
+                                        .setTitle("错误")
+                                        .setMessage("地区输入格式错误，应为“国家|省|市”或者“国家|省”或者“国家”")
+                                        .setPositiveButton("重新输入", null)
+                                        .show();
+                            else
+                                new AlertDialog.Builder(LineChartActivity.this)
+                                        .setTitle("错误")
+                                        .setMessage("暂时没有该国家或地区的数据")
+                                        .setPositiveButton("重新输入", null)
+                                        .show();
+
                         }
                         initLineChart();
                     }
@@ -105,6 +115,7 @@ public class LineChartActivity extends AppCompatActivity {
         confirmedPointValues.clear();
         curedPointValues.clear();
         deadPointValues.clear();
+        maxCureY = maxDeadY = 0;
         try {
             beginDate = simpleDateFormat.parse(data.getString("begin"));
             Date nowDate = new Date();
@@ -114,18 +125,25 @@ public class LineChartActivity extends AppCompatActivity {
             axisValues.add(new AxisValue(0).setLabel(simpleDateFormat.format(beginDate)));
 
             JSONArray jsonArray = data.getJSONArray("data");
-            int len = jsonArray.length();
+            int len = jsonArray.length(), _len = len * 95 / 100;
             for(int i = 1; i < 5; ++i)
             {
                 Date date = new Date(beginTime + timeDelta * i);
-                axisValues.add(new AxisValue(i * len / 5).setLabel(simpleDateFormat.format(date)));
+                axisValues.add(new AxisValue(i * _len / 5).setLabel(simpleDateFormat.format(date)));
             }
-            axisValues.add(new AxisValue(len-1).setLabel(simpleDateFormat.format(nowDate)));
+            axisValues.add(new AxisValue(_len).setLabel(simpleDateFormat.format(nowDate)));
             for(int i = 0; i < len; ++i){
                 JSONArray covidData = jsonArray.getJSONArray(i);
                 confirmedPointValues.add(new PointValue(i, covidData.getInt(0)));
                 curedPointValues.add(new PointValue(i, covidData.getInt(2)));
                 deadPointValues.add(new PointValue(i, covidData.getInt(3)));
+
+                if(maxCureY < covidData.getInt(0))
+                    maxCureY = covidData.getInt(0);
+                if(maxCureY < covidData.getInt(2))
+                    maxCureY = covidData.getInt(2);
+                if(maxDeadY < covidData.getInt(3))
+                    maxDeadY = covidData.getInt(3);
             }
         }catch (JSONException e){
             Log.d("getPointValues", e.toString());
@@ -172,10 +190,25 @@ public class LineChartActivity extends AppCompatActivity {
         lineChartData2.setAxisXBottom(axisX);
 
         Axis axisY = new Axis();
-        axisY.setName("number");
         axisY.setTextSize(10);
+        if(maxCureY < 12)
+        {
+            List<AxisValue> axisYValues = new ArrayList<>();
+            for (int i = 0; i <= maxCureY; ++i)
+                axisYValues.add(new AxisValue(i).setValue(i));
+            axisY.setValues(axisYValues);
+        }
         lineChartData.setAxisYLeft(axisY);
-        lineChartData2.setAxisYLeft(axisY);
+        Axis axisY2 = new Axis();
+        axisY2.setTextSize(10);
+        if(maxDeadY < 12)
+        {
+            List<AxisValue> axisYValues = new ArrayList<>();
+            for (int i = 0; i <= maxDeadY; ++i)
+                axisYValues.add(new AxisValue(i).setValue(i));
+            axisY2.setValues(axisYValues);
+        }
+        lineChartData2.setAxisYLeft(axisY2);
 
         lineChartView1.setInteractive(true);
         lineChartView1.setZoomEnabled(true);

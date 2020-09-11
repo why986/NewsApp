@@ -77,6 +77,29 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
                     news_list = manager.getSimpleNewsListFromDatabase(type, page_count);
                     recycleViewAdapter.changeToNews(news_list);
                     recycleViewAdapter.notifyDataSetChanged();
+                    recyclerView.addOnScrollListener(new onLoadMoreListener() {
+                        @Override
+                        protected void onLoading(int countItem,int lastItem) {
+                            Manager manager = Manager.getInstance(mcontext);
+                            page_count++;
+                            manager.getSimpleNewsList(new Manager.SimpleNewsCallBack() {
+                                @Override
+                                public void onError(String data) {
+                                    Log.d("recyclerView.addOnScrollListener", data);
+                                    news_list.addAll(Manager.getInstance(view.getContext()).getSimpleNewsListFromDatabase(type, page_count));
+                                    ((NewsRecycleViewAdapter)recycleViewAdapter).changeToNews(news_list);
+                                    recycleViewAdapter.notifyDataSetChanged();
+                                }
+
+                                @Override
+                                public void onSuccess(List<SimpleNews> data) {
+                                    news_list.addAll(data);
+                                    ((NewsRecycleViewAdapter)recycleViewAdapter).changeToNews(news_list);
+                                    recycleViewAdapter.notifyDataSetChanged();
+                                }
+                            }, type, page_count, SIZE);
+                        }
+                    });
                 }
             }
 
@@ -94,13 +117,15 @@ public class NewsListFragment extends Fragment implements SwipeRefreshLayout.OnR
                         manager.getSimpleNewsList(new Manager.SimpleNewsCallBack() {
                             @Override
                             public void onError(String data) {
-                                Log.d("manager.getSimpleNewsList", data);
+                                Log.d("recyclerView.addOnScrollListener", data);
+                                news_list.addAll(Manager.getInstance(view.getContext()).getSimpleNewsListFromDatabase(type, page_count));
+                                ((NewsRecycleViewAdapter)recycleViewAdapter).changeToNews(news_list);
+                                recycleViewAdapter.notifyDataSetChanged();
                             }
 
                             @Override
                             public void onSuccess(List<SimpleNews> data) {
                                 news_list.addAll(data);
-                                //List<SimpleNews> news_list = manager.getSimpleNewsList(type, page_count, SIZE);
                                 ((NewsRecycleViewAdapter)recycleViewAdapter).changeToNews(news_list);
                                 recycleViewAdapter.notifyDataSetChanged();
                             }
