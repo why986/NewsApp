@@ -3,6 +3,7 @@ package com.java.wanghaoyu;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -114,13 +115,13 @@ public class LineChartActivity extends AppCompatActivity {
             axisValues.add(new AxisValue(0).setLabel(simpleDateFormat.format(beginDate)));
 
             JSONArray jsonArray = data.getJSONArray("data");
-            int len = jsonArray.length();
+            int len = jsonArray.length(), _len = len * 9 / 10;
             for(int i = 1; i < 5; ++i)
             {
                 Date date = new Date(beginTime + timeDelta * i);
-                axisValues.add(new AxisValue(i * len / 5).setLabel(simpleDateFormat.format(date)));
+                axisValues.add(new AxisValue(i * _len / 5).setLabel(simpleDateFormat.format(date)));
             }
-            axisValues.add(new AxisValue(len-1).setLabel(simpleDateFormat.format(nowDate)));
+            axisValues.add(new AxisValue(_len).setLabel(simpleDateFormat.format(nowDate)));
             for(int i = 0; i < len; ++i){
                 JSONArray covidData = jsonArray.getJSONArray(i);
                 confirmedPointValues.add(new PointValue(i, covidData.getInt(0)));
